@@ -1,0 +1,295 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+// ─── Enums ──────────────────────────────────────────────
+
+enum UserRole {
+  ADMIN
+  ANALYST
+  VIEWER
+}
+
+enum AlertSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum AlertStatus {
+  PENDING
+  SENT
+  READ
+  DISMISSED
+}
+
+enum AlertType {
+  PRICE_SPIKE
+  PRICE_DROP
+  SUPPLY_SHORTAGE
+  DEMAND_SURGE
+  ANOMALY_DETECTED
+}
+
+enum DataSource {
+  KEMENTAN
+  BMKG
+  BPS
+  PIHPS
+  MANUAL_INPUT
+  SCRAPED
+}
+
+enum AnomalyStatus {
+  DETECTED
+  CONFIRMED
+  FALSE_POSITIVE
+  RESOLVED
+}
+
+// ─── Users ──────────────────────────────────────────────
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      UserRole @default(VIEWER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  alerts         Alert[]
+  auditLogs      AuditLog[]
+
+  @@map("users")
+}
+
+// ─── Commodities ────────────────────────────────────────
+
+model Commodity {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  localName   String
+  unit        String  @default("kg")
+  category    String
+  isActive    Boolean @default(true)
+  createdAt   DateTime @default(now())
+
+  priceRecords       PriceRecord[]
+  supplyEstimates    SupplyEstimate[]
+  forecasts          Forecast[]
+  anomalies          Anomaly[]
+  alerts             Alert[]
+  recommendations    DistributionRecommendation[]
+
+  @@map("commodities")
+}
+
+// ─── Regions ────────────────────────────────────────────
+
+model Region {
+  id         String  @id @default(cuid())
+  name       String
+  province   String
+  type       String  @default("city") // city | district | province
+  latitude   Float
+  longitude  Float
+  isActive   Boolean @default(true)
+  createdAt  DateTime @default(now())
+
+  priceRecords        PriceRecord[]
+  supplyEstimates     SupplyEstimate[]
+  weatherRecords      WeatherRecord[]
+  forecastsAsOrigin   Forecast[]
+  anomalies           Anomaly[]
+  alertsAsRegion      Alert[]
+  recommendationsFrom DistributionRecommendation[] @relation("OriginRegion")
+  recommendationsTo   DistributionRecommendation[] @relation("DestinationRegion")
+
+  @@unique([name, province])
+  @@map("regions")
+}
+
+// ─── Price Records ──────────────────────────────────────
+
+model PriceRecord {
+  id              String     @id @default(cuid())
+  commodityId     String
+  regionId        String
+  price           Float
+  priceMin        Float?
+  priceMax        Float?
+  source          DataSource
+  confidenceScore Float      @default(1.0) // 0.0 - 1.0
+  recordedAt      DateTime
+  createdAt       DateTime   @default(now())
+
+  commodity Commodity @relation(fields: [commodityId], references: [id])
+  region    Region    @relation(fields: [regionId], references: [id])
+
+  @@index([commodityId, regionId, recordedAt])
+  @@index([recordedAt])
+  @@map("price_records")
+}
+
+// ─── Weather Records ────────────────────────────────────
+
+model WeatherRecord {
+  id            String   @id @default(cuid())
+  regionId      String
+  temperature   Float?
+  humidity      Float?
+  rainfall      Float?
+  windSpeed     Float?
+  recordedAt    DateTime
+  createdAt     DateTime @default(now())
+
+  region Region @relation(fields: [regionId], references: [id])
+
+  @@index([regionId, recordedAt])
+  @@map("weather_records")
+}
+
+// ─── Supply Estimates ───────────────────────────────────
+
+model SupplyEstimate {
+  id              String   @id @default(cuid())
+  commodityId     String
+  regionId        String
+  estimatedVolume Float
+  unit            String   @default("ton")
+  weekStart       DateTime
+  source          DataSource
+  confidenceScore Float    @default(0.7)
+  createdAt       DateTime @default(now())
+
+  commodity Commodity @relation(fields: [commodityId], references: [id])
+  region    Region    @relation(fields: [regionId], references: [id])
+
+  @@index([commodityId, regionId, weekStart])
+  @@map("supply_estimates")
+}
+
+// ─── Forecasts ──────────────────────────────────────────
+
+model Forecast {
+  id             String   @id @default(cuid())
+  commodityId    String
+  regionId       String
+  forecastDate   DateTime
+  predictedPrice Float
+  lowerBound     Float
+  upperBound     Float
+  confidenceLevel Float   @default(0.80)
+  modelVersion   String   @default("v1")
+  mape           Float?   // error dari prediksi sebelumnya
+  createdAt      DateTime @default(now())
+
+  commodity Commodity @relation(fields: [commodityId], references: [id])
+  region    Region    @relation(fields: [regionId], references: [id])
+
+  @@index([commodityId, regionId, forecastDate])
+  @@map("forecasts")
+}
+
+// ─── Anomalies ──────────────────────────────────────────
+
+model Anomaly {
+  id            String        @id @default(cuid())
+  commodityId   String
+  regionId      String
+  detectedAt    DateTime
+  score         Float
+  zScore        Float?
+  pctChange7d   Float?
+  explanation   String
+  status        AnomalyStatus @default(DETECTED)
+  resolvedAt    DateTime?
+  createdAt     DateTime      @default(now())
+
+  commodity Commodity @relation(fields: [commodityId], references: [id])
+  region    Region    @relation(fields: [regionId], references: [id])
+  alerts    Alert[]
+
+  @@index([commodityId, regionId, detectedAt])
+  @@map("anomalies")
+}
+
+// ─── Distribution Recommendations ───────────────────────
+
+model DistributionRecommendation {
+  id                String   @id @default(cuid())
+  commodityId       String
+  originRegionId    String
+  destinationId     String
+  score             Float
+  surplusScore      Float
+  deficitScore      Float
+  priceDifferential Float
+  distancePenalty   Float
+  reasons           String[] // array of explanation strings
+  confidenceScore   Float    @default(0.7)
+  validUntil        DateTime
+  createdAt         DateTime @default(now())
+
+  commodity    Commodity @relation(fields: [commodityId], references: [id])
+  originRegion Region    @relation("OriginRegion", fields: [originRegionId], references: [id])
+  destination  Region    @relation("DestinationRegion", fields: [destinationId], references: [id])
+
+  @@index([commodityId, score])
+  @@map("distribution_recommendations")
+}
+
+// ─── Alerts ─────────────────────────────────────────────
+
+model Alert {
+  id          String        @id @default(cuid())
+  type        AlertType
+  severity    AlertSeverity
+  commodityId String?
+  regionId    String?
+  anomalyId   String?
+  userId      String?
+  title       String
+  message     String
+  metadata    Json?
+  status      AlertStatus   @default(PENDING)
+  sentAt      DateTime?
+  readAt      DateTime?
+  createdAt   DateTime      @default(now())
+
+  commodity Commodity? @relation(fields: [commodityId], references: [id])
+  region    Region?    @relation(fields: [regionId], references: [id])
+  anomaly   Anomaly?   @relation(fields: [anomalyId], references: [id])
+  user      User?      @relation(fields: [userId], references: [id])
+
+  @@index([status, createdAt])
+  @@index([commodityId, createdAt])
+  @@map("alerts")
+}
+
+// ─── Audit Log ──────────────────────────────────────────
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  action     String
+  resource   String
+  resourceId String?
+  metadata   Json?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([resource, createdAt])
+  @@map("audit_logs")
+}

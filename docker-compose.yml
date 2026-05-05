@@ -1,0 +1,52 @@
+version: '3.9'
+
+services:
+  # ─── PostgreSQL ───────────────────────────────
+  db:
+    image: postgres:15-alpine
+    container_name: agriflow_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: agriflow_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - agriflow_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── Redis ────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: agriflow_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - agriflow_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── Redis UI (untuk debugging) ───────────────
+  redis-ui:
+    image: rediscommander/redis-commander:latest
+    container_name: agriflow_redis_ui
+    restart: unless-stopped
+    environment:
+      REDIS_HOSTS: "local:redis:6379"
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+
+volumes:
+  agriflow_db_data:
+  agriflow_redis_data:
