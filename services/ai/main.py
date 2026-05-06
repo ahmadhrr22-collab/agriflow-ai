@@ -3,7 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from app.core.config import settings
 from app.core.database import test_connection
-from app.routes.scraper import router as scraper_router
+from app.routes.scraper  import router as scraper_router
+from app.routes.insights import router as insights_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -27,7 +28,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(scraper_router, prefix="/api/v1")
+app.include_router(scraper_router,  prefix="/api/v1")
+app.include_router(insights_router, prefix="/api/v1")
 
 @app.get("/health")
 async def health():
