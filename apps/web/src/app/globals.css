@@ -1,26 +1,60 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #166534;
+  --color-primary-foreground: #ffffff;
+
+  --color-agri-50: #EAF3DE;
+  --color-agri-100: #C0DD97;
+  --color-agri-200: #97C459;
+  --color-agri-300: #639922;
+  --color-agri-400: #3B6D11;
+  --color-agri-500: #27500A;
+  --color-agri-600: #166534;
+  --color-agri-700: #15803d;
+  --color-agri-800: #14532d;
+  --color-agri-900: #052e16;
+
+  --font-sans: "Inter", sans-serif;
+  --radius: 0.5rem;
+}
+
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0a0a0a;
+  --card: #ffffff;
+  --card-foreground: #0a0a0a;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #166534;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --background: #0a0a0a;
+  --foreground: #fafafa;
+  --card: #1a1a1a;
+  --card-foreground: #fafafa;
+  --muted: #262626;
+  --muted-foreground: #a1a1aa;
+  --border: #27272a;
+  --input: #27272a;
+  --ring: #22c55e;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+  border-color: var(--border);
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  font-feature-settings: "rlig" 1, "calt" 1;
 }
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--muted); }
+::-webkit-scrollbar-thumb { background: var(--muted-foreground); border-radius: 999px; opacity: 0.3; }
