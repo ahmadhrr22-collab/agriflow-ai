@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { CommoditiesModule } from './commodities/commodities.module';
 import { RegionsModule } from './regions/regions.module';
+import { PricesModule } from './prices/prices.module';
 import { UsersService } from './users/users.service';
 import { CommoditiesService } from './commodities/commodities.service';
 import { RegionsService } from './regions/regions.service';
@@ -19,6 +20,7 @@ import { RegionsService } from './regions/regions.service';
     UsersModule,
     CommoditiesModule,
     RegionsModule,
+    PricesModule,
   ],
 })
 export class AppModule implements OnModuleInit {
