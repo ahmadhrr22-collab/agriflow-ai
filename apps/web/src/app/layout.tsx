@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import 'leaflet/dist/leaflet.css';
 import { Providers } from '@/components/layout/providers';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
     default: 'AgriFlow AI',
     template: '%s | AgriFlow AI',
   },
-  description: 'Food Supply Chain Intelligence Platform — Distribusi pangan yang lebih cerdas.',
+  description: 'Food Supply Chain Intelligence Platform',
 };
 
 export default function RootLayout({
