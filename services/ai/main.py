@@ -1,12 +1,12 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from app.core.config import settings
 from app.core.database import test_connection
-from app.routes.scraper   import router as scraper_router
-from app.routes.insights  import router as insights_router
-from app.routes.forecasts import router as forecasts_router
-from app.routes.anomalies import router as anomalies_router
+from app.routes.scraper          import router as scraper_router
+from app.routes.insights         import router as insights_router
+from app.routes.forecasts        import router as forecasts_router
+from app.routes.anomalies        import router as anomalies_router
+from app.routes.recommendations  import router as recommendations_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -17,7 +17,6 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="AgriFlow AI Service",
-    description="ML inference service untuk AgriFlow AI",
     version="1.0.0",
     lifespan=lifespan,
 )
@@ -30,10 +29,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(scraper_router,   prefix="/api/v1")
-app.include_router(insights_router,  prefix="/api/v1")
-app.include_router(forecasts_router, prefix="/api/v1")
-app.include_router(anomalies_router, prefix="/api/v1")
+app.include_router(scraper_router,         prefix="/api/v1")
+app.include_router(insights_router,        prefix="/api/v1")
+app.include_router(forecasts_router,       prefix="/api/v1")
+app.include_router(anomalies_router,       prefix="/api/v1")
+app.include_router(recommendations_router, prefix="/api/v1")
 
 @app.get("/health")
 async def health():
