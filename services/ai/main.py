@@ -6,6 +6,7 @@ from app.core.database import test_connection
 from app.routes.scraper   import router as scraper_router
 from app.routes.insights  import router as insights_router
 from app.routes.forecasts import router as forecasts_router
+from app.routes.anomalies import router as anomalies_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -32,6 +33,7 @@ app.add_middleware(
 app.include_router(scraper_router,   prefix="/api/v1")
 app.include_router(insights_router,  prefix="/api/v1")
 app.include_router(forecasts_router, prefix="/api/v1")
+app.include_router(anomalies_router, prefix="/api/v1")
 
 @app.get("/health")
 async def health():
