@@ -29,7 +29,8 @@ app.add_middleware(
         "https://agriflow-ai.vercel.app",
         "https://agriflow-lkmv2hw11-ahmadhrr22-collabs-projects.vercel.app",
         "https://agriflow-nnrhj2w6b-ahmadhrr22-collabs-projects.vercel.app",
-
+        "https://agriflow-b99kce13t-ahmadhrr22-collabs-projects.vercel.app/"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
