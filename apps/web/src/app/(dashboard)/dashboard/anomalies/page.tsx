@@ -9,7 +9,8 @@ import {
   ReferenceDot,
 } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
-import aiApi from '@/lib/ai-api';
+
+import api from '@/lib/api';
 
 
 const REGIONS = [
