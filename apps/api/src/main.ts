@@ -20,7 +20,12 @@ async function bootstrap() {
 
   // CORS
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: [
+      'http://localhost:3000',
+      'https://agriflow-ai.vercel.app',
+      'https://agriflow-nnrhj2w6b-ahmadhrr22-collabs-projects.vercel.app',
+      /\.vercel\.app$/,
+    ],
     credentials: true,
   });
 
@@ -31,11 +36,15 @@ async function bootstrap() {
     .setVersion('1.0')
     .addBearerAuth()
     .build();
+
   const document = SwaggerModule.createDocument(app, config);
+
   SwaggerModule.setup('api/docs', app, document);
 
   const port = process.env.PORT || 3001;
+
   await app.listen(port, '0.0.0.0');
+
   console.log(`🚀 AgriFlow API running on http://localhost:${port}`);
   console.log(`📚 Swagger docs: http://localhost:${port}/api/docs`);
 }
