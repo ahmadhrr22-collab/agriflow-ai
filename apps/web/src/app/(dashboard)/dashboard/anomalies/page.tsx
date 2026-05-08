@@ -10,7 +10,6 @@ import {
 } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
 
-
 const REGIONS = [
   { id: 'cmotsnfsj0003ix1o3g2vp8h2', name: 'Jakarta Pusat'   },
   { id: 'cmotsnft30004ix1or61zz8ey',  name: 'Jakarta Timur'   },
@@ -28,7 +27,8 @@ function usePriceHistory(commodityId: string, regionId: string) {
   return useQuery({
     queryKey: ['price-history-anomaly', commodityId, regionId],
     queryFn: async () => {
-      const token = localStorage.getItem('agriflow_token');
+      const token = typeof window !== 'undefined'
+        ? localStorage.getItem('agriflow_token') : null;
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/prices/history?commodityId=${commodityId}&regionId=${regionId}&days=30`,
         { headers: { Authorization: `Bearer ${token}` } }
@@ -48,7 +48,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     }}>
       <div className="font-medium mb-1">{label}</div>
       <div className="flex items-center gap-2">
-        <div className="w-2 h-2 rounded-full" style={{background: '#166534'}}></div>
+        <div className="w-2 h-2 rounded-full" style={{background: '#166634'}}></div>
         <span style={{color: 'var(--muted-foreground)'}}>Harga:</span>
         <span className="font-medium">
           Rp {Number(payload[0]?.value).toLocaleString('id-ID')}
@@ -70,18 +70,11 @@ export default function AnomaliesPage() {
   const selectedRegion  = REGIONS.find((r) => r.id === regionId);
   const selectedCommodity = commodities?.find((c: any) => c.id === commodityId);
 
-  // Format chart data dengan anomaly markers
   const chartData = (historyData || []).map((r: any) => {
-    const date     = new Date(r.recordedAt).toLocaleDateString('id-ID', {
+    const date = new Date(r.recordedAt).toLocaleDateString('id-ID', {
       day: 'numeric', month: 'short',
     });
-    const isAnomaly = anomalies.some((a: any) => {
-      const aDate = new Date(a.date).toLocaleDateString('id-ID', {
-        day: 'numeric', month: 'short',
-      });
-      return aDate === date;
-    });
-    return { date, price: r.price, isAnomaly };
+    return { date, price: r.price };
   });
 
   const anomalyDates = new Set(
@@ -92,7 +85,6 @@ export default function AnomaliesPage() {
 
   return (
     <div className="space-y-5">
-      {/* Controls */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-sm font-medium">Deteksi Anomali</h2>
@@ -124,7 +116,6 @@ export default function AnomaliesPage() {
         </div>
       </div>
 
-      {/* Summary cards */}
       <div className="grid grid-cols-4 gap-4">
         {[
           {
@@ -172,7 +163,6 @@ export default function AnomaliesPage() {
       </div>
 
       <div className="grid grid-cols-3 gap-5">
-        {/* Price chart with anomaly markers */}
         <div className="col-span-2 rounded-xl p-5" style={{
           background: 'var(--background)',
           border: '0.5px solid var(--border)',
@@ -189,7 +179,7 @@ export default function AnomaliesPage() {
             <div className="flex items-center gap-3 text-xs"
               style={{color: 'var(--muted-foreground)'}}>
               <div className="flex items-center gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full" style={{background: '#166534'}}></div>
+                <div className="w-2.5 h-2.5 rounded-full" style={{background: '#166634'}}></div>
                 Normal
               </div>
               <div className="flex items-center gap-1.5">
@@ -219,7 +209,7 @@ export default function AnomaliesPage() {
               <Line
                 type="monotone"
                 dataKey="price"
-                stroke="#166534"
+                stroke="#166634"
                 strokeWidth={2}
                 dot={(props: any) => {
                   const { cx, cy, payload } = props;
@@ -230,7 +220,7 @@ export default function AnomaliesPage() {
                       cx={cx}
                       cy={cy}
                       r={isAnom ? 6 : 3}
-                      fill={isAnom ? '#E24B4A' : '#166534'}
+                      fill={isAnom ? '#E24B4A' : '#166634'}
                       stroke={isAnom ? 'white' : 'none'}
                       strokeWidth={isAnom ? 2 : 0}
                     />
@@ -267,7 +257,6 @@ export default function AnomaliesPage() {
           </div>
         </div>
 
-        {/* Anomaly list */}
         <div className="rounded-xl overflow-hidden" style={{
           background: 'var(--background)',
           border: '0.5px solid var(--border)',
