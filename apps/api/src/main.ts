@@ -23,6 +23,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:3000',
       'https://agriflow-ai.vercel.app',
+      'https://agriflow-lkmv2hw11-ahmadhrr22-collabs-projects.vercel.app',
       'https://agriflow-nnrhj2w6b-ahmadhrr22-collabs-projects.vercel.app',
       /\.vercel\.app$/,
     ],
