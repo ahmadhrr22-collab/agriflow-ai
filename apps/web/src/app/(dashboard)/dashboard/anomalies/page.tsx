@@ -9,7 +9,6 @@ import {
   ReferenceDot,
 } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
-import api from '@/lib/api';
 
 
 const REGIONS = [
@@ -29,10 +28,12 @@ function usePriceHistory(commodityId: string, regionId: string) {
   return useQuery({
     queryKey: ['price-history-anomaly', commodityId, regionId],
     queryFn: async () => {
-      const res = await api.get(
-        `/prices/history?commodityId=${commodityId}&regionId=${regionId}&days=30`
+      const token = localStorage.getItem('agriflow_token');
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/prices/history?commodityId=${commodityId}&regionId=${regionId}&days=30`,
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-      return res.data;
+      return res.json();
     },
     enabled: !!commodityId && !!regionId,
   });
