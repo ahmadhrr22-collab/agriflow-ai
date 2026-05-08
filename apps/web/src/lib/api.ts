@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1',
+  // HARDCODE: Memaksa URL ke Cloud Run untuk mem-bypass masalah env Turborepo
+  baseURL: 'https://agriflow-api-694788844994.asia-southeast1.run.app/api/v1',
   headers: { 'Content-Type': 'application/json' },
 });
 
