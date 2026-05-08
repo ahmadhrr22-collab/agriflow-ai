@@ -1,11 +1,7 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
-
-const aiApi = axios.create({
-  baseURL: 'http://localhost:8000/api/v1',
-});
+import aiApi from '@/lib/ai-api';
 
 export function useForecast() {
   return useMutation({

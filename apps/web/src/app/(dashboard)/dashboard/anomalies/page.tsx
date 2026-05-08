@@ -9,10 +9,8 @@ import {
   ReferenceDot,
 } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import api from '@/lib/api';
+import aiApi from '@/lib/ai-api';
 
-const aiApi = axios.create({ baseURL: 'http://localhost:8000/api/v1' });
 
 const REGIONS = [
   { id: 'cmotsnfsj0003ix1o3g2vp8h2', name: 'Jakarta Pusat'   },
