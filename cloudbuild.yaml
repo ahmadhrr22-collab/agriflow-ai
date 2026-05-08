@@ -1,0 +1,20 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'asia-southeast1-docker.pkg.dev/agriflow-495511/agriflow/agriflow-api:latest'
+      - 'apps/api'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'asia-southeast1-docker.pkg.dev/agriflow-495511/agriflow/agriflow-ai:latest'
+      - 'services/ai'
+
+images:
+  - 'asia-southeast1-docker.pkg.dev/agriflow-495511/agriflow/agriflow-api:latest'
+  - 'asia-southeast1-docker.pkg.dev/agriflow-495511/agriflow/agriflow-ai:latest'
+
+timeout: '1800s'
