@@ -20,15 +20,9 @@ export function MetricCards() {
   const { selectedCommodityId } = useDashboardStore();
   const { data, isLoading, error } = useNationalSummary(selectedCommodityId);
 
-  if (isLoading) {
-    return (
-      <div className="grid grid-cols-4 gap-4">
-        {[...Array(4)].map((_, i) => <SkeletonCard key={i} />)}
-      </div>
-    );
-  }
-
-  if (error || !data) {
+  // 1. TAMPILKAN ERROR: Hanya jika benar-benar ada error dari API
+  if (error) {
+    console.error("Detail Error Metrik:", error);
     return (
       <div className="p-4 rounded-xl text-sm" style={{
         background: '#FCEBEB',
@@ -40,6 +34,16 @@ export function MetricCards() {
     );
   }
 
+  // 2. TAMPILKAN SKELETON: Jika loading, atau ID komoditas belum terpilih, atau data masih kosong
+  if (isLoading || !data || !selectedCommodityId) {
+    return (
+      <div className="grid grid-cols-4 gap-4">
+        {[...Array(4)].map((_, i) => <SkeletonCard key={i} />)}
+      </div>
+    );
+  }
+
+  // 3. RENDER DATA METRIK JIKA SUDAH BERHASIL DIAMBIL
   const metrics = [
     {
       label:       'Harga Rata-rata Nasional',
