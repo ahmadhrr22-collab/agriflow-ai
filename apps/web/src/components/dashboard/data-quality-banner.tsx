@@ -1,11 +1,19 @@
 'use client';
 
-import { useCommodities }    from '@/hooks/use-prices';
-import { useDashboardStore } from '@/store/dashboard.store';
+import { useEffect }             from 'react';
+import { useCommodities }        from '@/hooks/use-prices';
+import { useDashboardStore }     from '@/store/dashboard.store';
 
 export function DataQualityBanner() {
-  const { data: commodities }                    = useCommodities();
+  const { data: commodities }                           = useCommodities();
   const { selectedCommodityId, setSelectedCommodityId } = useDashboardStore();
+
+  // Set commodity pertama dari API saat load
+  useEffect(() => {
+    if (commodities?.length > 0 && !selectedCommodityId) {
+      setSelectedCommodityId(commodities[0].id);
+    }
+  }, [commodities, selectedCommodityId, setSelectedCommodityId]);
 
   return (
     <div className="flex items-center justify-between px-4 py-2.5 rounded-xl text-sm"
@@ -18,7 +26,6 @@ export function DataQualityBanner() {
       </div>
 
       <div className="flex items-center gap-3">
-        {/* Commodity selector */}
         <select
           value={selectedCommodityId}
           onChange={(e) => setSelectedCommodityId(e.target.value)}
