@@ -110,7 +110,8 @@ export default function ForecastPage() {
   // Initialize default values from API
   useEffect(() => {
     if (
-      commodities?.length &&
+      commodities &&
+      commodities.length > 0 &&
       !commodityId
     ) {
       const cabaiMerah =
@@ -128,7 +129,8 @@ export default function ForecastPage() {
 
   useEffect(() => {
     if (
-      regions?.length &&
+      regions &&
+      regions.length > 0 &&
       !regionId
     ) {
       const jakartaPusat =
@@ -286,6 +288,7 @@ export default function ForecastPage() {
             value: forecastData
               ? `${forecastData.mape}%`
               : '-',
+
             sub:
               forecastData?.mape < 10
                 ? '✓ Akurasi tinggi'
@@ -298,11 +301,13 @@ export default function ForecastPage() {
           },
           {
             label: 'Data Points',
+
             value: forecastData
               ? `${forecastData.data_points}`
               : '-',
 
-            sub: 'Hari historis dipakai',
+            sub:
+              'Hari historis dipakai',
           },
           {
             label:
@@ -313,7 +318,8 @@ export default function ForecastPage() {
               0
             }`,
 
-            sub: '30 hari terakhir',
+            sub:
+              '30 hari terakhir',
 
             color:
               (
@@ -369,7 +375,197 @@ export default function ForecastPage() {
         ))}
       </div>
 
-      {/* Remaining UI tetap sama */}
+      {/* Forecast Chart */}
+      <div
+        className="rounded-xl p-5"
+        style={{
+          background:
+            'var(--background)',
+
+          border:
+            '0.5px solid var(--border)',
+        }}
+      >
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h3 className="text-sm font-medium">
+              {
+                selectedCommodity?.localName
+              }{' '}
+              ·{' '}
+              {selectedRegion?.name}
+            </h3>
+
+            <p
+              className="text-xs mt-0.5"
+              style={{
+                color:
+                  'var(--muted-foreground)',
+              }}
+            >
+              Prediksi 7 hari ke depan
+              dengan confidence interval
+              80%
+            </p>
+          </div>
+
+          <div
+            className="flex items-center gap-3 text-xs"
+            style={{
+              color:
+                'var(--muted-foreground)',
+            }}
+          >
+            <div className="flex items-center gap-1.5">
+              <div
+                className="w-3 h-0.5 border-dashed border-t-2"
+                style={{
+                  borderColor:
+                    '#639922',
+                }}
+              />
+
+              Prediksi
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              <div
+                className="w-3 h-2 rounded-sm opacity-40"
+                style={{
+                  background:
+                    '#639922',
+                }}
+              />
+
+              CI 80%
+            </div>
+          </div>
+        </div>
+
+        {isPending ? (
+          <div
+            className="h-64 flex items-center justify-center animate-pulse rounded-lg"
+            style={{
+              background:
+                'var(--muted)',
+            }}
+          />
+        ) : (
+          <ResponsiveContainer
+            width="100%"
+            height={260}
+          >
+            <ComposedChart
+              data={chartData}
+              margin={{
+                top: 5,
+                right: 5,
+                left: 0,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="var(--border)"
+              />
+
+              <XAxis
+                dataKey="date"
+                tick={{
+                  fontSize: 11,
+                  fill: 'var(--muted-foreground)',
+                }}
+                axisLine={false}
+                tickLine={false}
+              />
+
+              <YAxis
+                tick={{
+                  fontSize: 11,
+                  fill: 'var(--muted-foreground)',
+                }}
+                axisLine={false}
+                tickLine={false}
+                tickFormatter={(v) =>
+                  `${(
+                    v / 1000
+                  ).toFixed(0)}k`
+                }
+              />
+
+              <Tooltip
+                content={
+                  <CustomTooltip />
+                }
+              />
+
+              <Area
+                type="monotone"
+                dataKey="ci_high"
+                fill="#639922"
+                stroke="none"
+                fillOpacity={0.15}
+              />
+
+              <Area
+                type="monotone"
+                dataKey="ci_low"
+                fill="var(--background)"
+                stroke="none"
+                fillOpacity={1}
+              />
+
+              <Line
+                type="monotone"
+                dataKey="predicted"
+                stroke="#639922"
+                strokeWidth={2}
+                strokeDasharray="5 4"
+                dot={{
+                  r: 4,
+                  fill: '#639922',
+                }}
+              />
+            </ComposedChart>
+          </ResponsiveContainer>
+        )}
+
+        {/* Footer */}
+        <div
+          className="flex items-center justify-between mt-3 pt-3 text-xs"
+          style={{
+            borderTop:
+              '0.5px solid var(--border)',
+
+            color:
+              'var(--muted-foreground)',
+          }}
+        >
+          <span>
+            Model: Prophet +
+            XGBoost Ensemble
+          </span>
+
+          {forecastData?.mape && (
+            <span>
+              MAPE:
+
+              <span
+                className="font-medium ml-1"
+                style={{
+                  color:
+                    forecastData.mape <
+                    10
+                      ? '#27500A'
+                      : '#633806',
+                }}
+              >
+                {forecastData.mape}%
+              </span>
+            </span>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

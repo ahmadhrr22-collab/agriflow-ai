@@ -21,7 +21,8 @@ export default function RecommendationsPage() {
   // Initialize commodity from API
   useEffect(() => {
     if (
-      commodities?.length > 0 &&
+      commodities &&
+      commodities.length > 0 &&
       !commodityId
     ) {
       const cabaiMerah =

@@ -83,7 +83,8 @@ export default function AnomaliesPage() {
   // Initialize commodity from API
   useEffect(() => {
     if (
-      commodities?.length > 0 &&
+      commodities &&
+      commodities.length > 0 &&
       !commodityId
     ) {
       const cabaiMerah =
@@ -102,7 +103,8 @@ export default function AnomaliesPage() {
   // Initialize region from API
   useEffect(() => {
     if (
-      regions?.length > 0 &&
+      regions &&
+      regions.length > 0 &&
       !regionId
     ) {
       const jakartaPusat =
