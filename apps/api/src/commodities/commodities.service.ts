@@ -18,33 +18,20 @@ export class CommoditiesService {
 
   async seed() {
     const commodities = [
-      {
-        name: 'cabai-merah',
-        localName: 'Cabai Merah',
-        unit: 'kg',
-        category: 'Sayuran',
-      },
-      {
-        name: 'bawang-merah',
-        localName: 'Bawang Merah',
-        unit: 'kg',
-        category: 'Sayuran',
-      },
-      {
-        name: 'beras-medium',
-        localName: 'Beras Medium',
-        unit: 'kg',
-        category: 'Beras',
-      },
+      { name: 'cabai-merah',   localName: 'Cabai Merah',   unit: 'kg',    category: 'Sayuran' },
+      { name: 'bawang-merah',  localName: 'Bawang Merah',  unit: 'kg',    category: 'Sayuran' },
+      { name: 'beras-medium',  localName: 'Beras Medium',  unit: 'kg',    category: 'Beras'   },
+      { name: 'telur-ayam',    localName: 'Telur Ayam',    unit: 'kg',    category: 'Protein' },
+      { name: 'minyak-goreng', localName: 'Minyak Goreng', unit: 'liter', category: 'Minyak'  },
     ];
 
     for (const c of commodities) {
       await this.prisma.commodity.upsert({
-        where: { name: c.name },
-        update: {},
+        where:  { name: c.name },
+        update: { localName: c.localName },
         create: c,
       });
     }
-    console.log('✅ Commodities seeded');
+    console.log('✅ Commodities seeded (5 komoditas)');
   }
 }
