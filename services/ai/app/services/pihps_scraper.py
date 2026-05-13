@@ -12,23 +12,23 @@ BASE_URL = "https://www.bi.go.id/hargapangan/WebSite/Home"
 # Mapping komoditas AgriFlow → PIHPS
 COMMODITY_MAPPING = {
     "cabai-merah": {
-        "pihps_ids": [13, 14],
+        "pihps_ids": [7],   # parent ID, bukan sub-ID
         "name":      "Cabai Merah",
     },
     "bawang-merah": {
-        "pihps_ids": [11],
+        "pihps_ids": [5],   # parent ID
         "name":      "Bawang Merah",
     },
     "beras-medium": {
-        "pihps_ids": [3, 4],
+        "pihps_ids": [1],   # parent ID
         "name":      "Beras Medium",
     },
     "telur-ayam": {
-        "pihps_ids": [10],
+        "pihps_ids": [4],   # parent ID
         "name":      "Telur Ayam",
     },
     "minyak-goreng": {
-        "pihps_ids": [17, 18, 19],
+        "pihps_ids": [9],   # parent ID
         "name":      "Minyak Goreng",
     },
 }
@@ -80,11 +80,11 @@ HEADERS = {
 async def fetch_pihps(pihps_commodity_id: int, target_date: date) -> list:
     """Fetch satu sub-komoditas dari PIHPS untuk semua provinsi."""
     try:
-        # Format tanggal: May 10, 2026
         month_names = [
             "", "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
         ]
+        # Pastikan tidak ada leading zero di tanggal
         date_str = f"{month_names[target_date.month]} {target_date.day}, {target_date.year}"
 
         params = {
@@ -98,13 +98,29 @@ async def fetch_pihps(pihps_commodity_id: int, target_date: date) -> list:
             "_":         int(datetime.now().timestamp() * 1000),
         }
 
-        async with httpx.AsyncClient(timeout=30.0, headers=HEADERS) as client:
-            res = await client.get(f"{BASE_URL}/GetGridData1", params=params)
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+            "Referer":    "https://www.bi.go.id/hargapangan",
+            "Accept":     "application/json, text/javascript, */*",
+            "X-Requested-With": "XMLHttpRequest",
+        }
+
+        async with httpx.AsyncClient(
+            timeout=30.0,
+            headers=headers,
+            follow_redirects=True,
+        ) as client:
+            res = await client.get(
+                f"{BASE_URL}/GetGridData1",
+                params=params,
+            )
             res.raise_for_status()
-            return res.json().get("data", [])
+            data = res.json().get("data", [])
+            logger.info(f"PIHPS {pihps_commodity_id} {date_str}: {len(data)} records")
+            return data
 
     except Exception as e:
-        logger.error(f"PIHPS fetch error (id={pihps_commodity_id}): {e}")
+        logger.error(f"PIHPS fetch error (id={pihps_commodity_id}, date={target_date}): {e}")
         return []
 
 def get_db_ids(db, commodity_slug: str, region_name: str):
