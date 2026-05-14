@@ -38,6 +38,5 @@ export class AppModule implements OnModuleInit {
     await this.usersService.seedDemoUser();
     await this.commoditiesService.seed();
     await this.regionsService.seed();
-    await this.alertsService.seedDemoAlerts();
   }
 }
