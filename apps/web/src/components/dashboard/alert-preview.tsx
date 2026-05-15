@@ -1,36 +1,35 @@
-import Link from 'next/link';
+'use client';
 
-const alerts = [
-  {
-    id: 1,
-    severity: 'critical',
-    title: 'Anomali harga cabai',
-    sub: 'Kramat Jati · Naik 22% / 3 hari',
-    time: '2 jam lalu',
-  },
-  {
-    id: 2,
-    severity: 'warning',
-    title: 'Potensi shortage',
-    sub: 'Jakarta Timur · Defisit 340 ton',
-    time: '5 jam lalu',
-  },
-  {
-    id: 3,
-    severity: 'warning',
-    title: 'Harga di atas baseline',
-    sub: 'Bekasi · +18% vs rata-rata',
-    time: '8 jam lalu',
-  },
-];
+import Link from 'next/link';
+import { useAlerts } from '@/hooks/use-alerts';
+
+type AlertPreviewItem = {
+  id: string;
+  title: string;
+  message?: string;
+  severity?: string;
+  createdAt?: string;
+  commodity?: {
+    localName?: string;
+  };
+  region?: {
+    name?: string;
+  };
+};
 
 const severityConfig = {
-  critical: { bg: '#FCEBEB', border: '#E24B4A', dot: '#E24B4A', text: '#A32D2D' },
-  warning:  { bg: '#FAEEDA', border: '#EF9F27', dot: '#EF9F27', text: '#633806' },
-  info:     { bg: '#E6F1FB', border: '#378ADD', dot: '#378ADD', text: '#0C447C' },
+  critical: { bg: '#FCEBEB', border: '#E24B4A', text: '#A32D2D' },
+  high:     { bg: '#FCEBEB', border: '#E24B4A', text: '#A32D2D' },
+  warning:  { bg: '#FAEEDA', border: '#EF9F27', text: '#633806' },
+  medium:   { bg: '#FAEEDA', border: '#EF9F27', text: '#633806' },
+  low:      { bg: '#E6F1FB', border: '#378ADD', text: '#0C447C' },
+  info:     { bg: '#E6F1FB', border: '#378ADD', text: '#0C447C' },
 };
 
 export function AlertPreview() {
+  const { data, isLoading } = useAlerts();
+  const alerts = ((data || []) as AlertPreviewItem[]).slice(0, 3);
+
   return (
     <div className="rounded-xl p-4" style={{
       background: 'var(--background)',
@@ -44,29 +43,52 @@ export function AlertPreview() {
           Lihat semua →
         </Link>
       </div>
+
       <div className="space-y-2">
-        {alerts.map((alert) => {
-          const cfg = severityConfig[alert.severity as keyof typeof severityConfig];
-          return (
-            <div key={alert.id} className="flex items-start gap-3 p-2.5 rounded-lg" style={{
-              background: cfg.bg,
-              borderLeft: `3px solid ${cfg.border}`,
-              borderRadius: '0 8px 8px 0',
-            }}>
-              <div className="flex-1 min-w-0">
-                <div className="text-xs font-medium truncate" style={{color: cfg.text}}>
-                  {alert.title}
+        {isLoading ? (
+          [1, 2, 3].map((i) => (
+            <div key={i} className="h-14 rounded-lg animate-pulse"
+              style={{background: 'var(--muted)'}} />
+          ))
+        ) : alerts.length === 0 ? (
+          <div className="text-xs text-center py-4"
+            style={{color: 'var(--muted-foreground)'}}>
+            Tidak ada alert saat ini
+          </div>
+        ) : (
+          alerts.map((alert) => {
+            const severity = String(alert.severity || 'info').toLowerCase();
+            const cfg =
+              severityConfig[severity as keyof typeof severityConfig] ||
+              severityConfig.info;
+            const createdAt = alert.createdAt ? new Date(alert.createdAt) : null;
+
+            return (
+              <div key={alert.id} className="flex items-start gap-3 p-2.5 rounded-lg" style={{
+                background: cfg.bg,
+                borderLeft: `3px solid ${cfg.border}`,
+                borderRadius: '0 8px 8px 0',
+              }}>
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs font-medium truncate" style={{color: cfg.text}}>
+                    {alert.title}
+                  </div>
+                  <div className="text-xs mt-0.5 truncate" style={{color: 'var(--muted-foreground)'}}>
+                    {alert.region?.name || alert.message || alert.commodity?.localName || '-'}
+                  </div>
                 </div>
-                <div className="text-xs mt-0.5 truncate" style={{color: 'var(--muted-foreground)'}}>
-                  {alert.sub}
-                </div>
+                <span className="text-xs shrink-0" style={{color: 'var(--muted-foreground)'}}>
+                  {createdAt
+                    ? createdAt.toLocaleDateString('id-ID', {
+                        day: '2-digit',
+                        month: 'short',
+                      })
+                    : ''}
+                </span>
               </div>
-              <span className="text-xs shrink-0" style={{color: 'var(--muted-foreground)'}}>
-                {alert.time}
-              </span>
-            </div>
-          );
-        })}
+            );
+          })
+        )}
       </div>
     </div>
   );

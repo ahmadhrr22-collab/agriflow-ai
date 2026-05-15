@@ -5,7 +5,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def get_latest_prices(commodity_id: str) -> list:
+def get_latest_prices(commodity_id: str, days: int = 14) -> list:
     db = SessionLocal()
     try:
         rows = db.execute(
@@ -21,10 +21,10 @@ def get_latest_prices(commodity_id: str) -> list:
                 FROM price_records pr
                 JOIN regions r ON r.id = pr."regionId"
                 WHERE pr."commodityId" = :cid
-                AND pr."recordedAt" >= NOW() - INTERVAL '2 days'
+                AND pr."recordedAt" >= NOW() - (:days * INTERVAL '1 day')
                 ORDER BY pr."recordedAt" DESC
             """),
-            {"cid": commodity_id}
+            {"cid": commodity_id, "days": days}
         ).fetchall()
 
         # Ambil 1 record terbaru per region
@@ -116,6 +116,9 @@ def generate_recommendations(commodity_id: str, top_n: int = 5) -> dict:
     regions = get_latest_prices(commodity_id)
 
     if len(regions) < 2:
+        regions = get_latest_prices(commodity_id, days=90)
+
+    if len(regions) < 2:
         return {
             "success": False,
             "error":   "Data tidak cukup untuk generate rekomendasi",
@@ -132,8 +135,8 @@ def generate_recommendations(commodity_id: str, top_n: int = 5) -> dict:
             if origin["region_id"] == dest["region_id"]:
                 continue
 
-            # Hanya rekomendasikan jika selisih harga > 1000
-            if abs(origin["price"] - dest["price"]) < 1000:
+            # Hanya rekomendasikan jika selisih harga cukup terlihat.
+            if abs(origin["price"] - dest["price"]) < 500:
                 continue
 
             # Origin harus lebih murah dari destination
@@ -141,7 +144,7 @@ def generate_recommendations(commodity_id: str, top_n: int = 5) -> dict:
                 continue
 
             score = calculate_recommendation_score(origin, dest, avg_price)
-            if score["score"] > 0.05:  # Lower threshold
+            if score["score"] > 0.01:
                 all_scores.append(score)
 
     # Sort by score descending

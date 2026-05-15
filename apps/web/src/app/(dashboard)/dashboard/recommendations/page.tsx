@@ -47,6 +47,14 @@ export default function RecommendationsPage() {
   const recommendations =
     data?.recommendations || [];
 
+  const hasAvgPrice =
+    typeof data?.avg_price ===
+    'number';
+
+  const emptyMessage =
+    data?.error ||
+    'Selisih harga antar wilayah belum cukup signifikan untuk rekomendasi distribusi.';
+
   const selectedCommodity =
     commodities?.find(
       (c: any) =>
@@ -182,9 +190,7 @@ export default function RecommendationsPage() {
           {
             label: 'Total Pasangan',
 
-            value: data
-              ? `${data.total_pairs}`
-              : '-',
+            value: `${data?.total_pairs ?? 0}`,
 
             sub:
               'origin → destination',
@@ -194,9 +200,7 @@ export default function RecommendationsPage() {
             label:
               'Region Dianalisis',
 
-            value: data
-              ? `${data.regions_analyzed}`
-              : '-',
+            value: `${data?.regions_analyzed ?? 0}`,
 
             sub: 'wilayah aktif',
           },
@@ -205,8 +209,8 @@ export default function RecommendationsPage() {
             label:
               'Rata-rata Nasional',
 
-            value: data
-              ? `Rp ${data.avg_price?.toLocaleString(
+            value: hasAvgPrice
+              ? `Rp ${data.avg_price.toLocaleString(
                   'id-ID',
                 )}`
               : '-',
@@ -345,10 +349,7 @@ export default function RecommendationsPage() {
                 'var(--muted-foreground)',
             }}
           >
-            Selisih harga antar
-            wilayah belum cukup
-            signifikan untuk
-            rekomendasi distribusi.
+            {emptyMessage}
           </div>
         </div>
       ) : (

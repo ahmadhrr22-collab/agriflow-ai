@@ -2,12 +2,17 @@
 
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import { useDashboardStore } from '@/store/dashboard.store';
+import aiApi from '@/lib/ai-api';
 
-const aiApi = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_AI_URL || 'http://localhost:8000/api/v1',
-});
+type Recommendation = {
+  origin_region_id: string;
+  origin_name: string;
+  dest_region_id: string;
+  dest_name: string;
+  score: number;
+  reasons?: string[];
+};
 
 export function RecommendationPreview() {
   const { selectedCommodityId } = useDashboardStore();
@@ -24,7 +29,7 @@ export function RecommendationPreview() {
     refetchInterval: 1000 * 60 * 10,
   });
 
-  const recommendations = data?.recommendations || [];
+  const recommendations = (data?.recommendations || []) as Recommendation[];
 
   return (
     <div className="rounded-xl p-4" style={{
@@ -54,7 +59,7 @@ export function RecommendationPreview() {
         </div>
       ) : (
         <div className="space-y-2">
-          {recommendations.map((rec: any) => (
+          {recommendations.map((rec) => (
             <div key={`${rec.origin_region_id}-${rec.dest_region_id}`}
               className="p-3 rounded-lg" style={{
                 background: 'var(--muted)',
