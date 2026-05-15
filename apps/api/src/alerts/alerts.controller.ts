@@ -1,4 +1,4 @@
-import { Controller, Get, Patch, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Patch, Param, Query, UseGuards, Post } from '@nestjs/common';
 import { AlertsService } from './alerts.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ApiTags, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
@@ -19,6 +19,11 @@ export class AlertsController {
   @Get('unread-count')
   getUnreadCount() {
     return this.alertsService.getUnreadCount();
+  }
+
+  @Post('generate-from-prices')
+  generateFromPrices() {
+    return this.alertsService.generateFromPriceRecords();
   }
 
   @Patch(':id/read')
