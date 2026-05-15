@@ -108,8 +108,8 @@ export class AlertsService {
       const pctChange = ((latest.price - avgPrice) / avgPrice) * 100;
       const zScore = stdDev > 0 ? (latest.price - avgPrice) / stdDev : 0;
 
-      const isSpike = pctChange >= 10 || zScore >= 2;
-      const isDrop = pctChange <= -10 || zScore <= -2;
+      const isSpike = pctChange >= 15 || zScore >= 2.5;
+      const isDrop = pctChange <= -15 || zScore <= -2.5;
 
       if (!isSpike && !isDrop) {
         continue;
@@ -137,9 +137,9 @@ export class AlertsService {
       }
 
       const severity =
-        Math.abs(pctChange) >= 20 || Math.abs(zScore) >= 3
+        Math.abs(pctChange) >= 25 || Math.abs(zScore) >= 3.5
           ? 'CRITICAL'
-          : Math.abs(pctChange) >= 15 || Math.abs(zScore) >= 2.5
+          : Math.abs(pctChange) >= 20 || Math.abs(zScore) >= 3
             ? 'HIGH'
             : 'MEDIUM';
       const direction = isSpike ? 'naik' : 'turun';
