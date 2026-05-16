@@ -59,7 +59,7 @@ export default function LandingPage() {
               </div>
 
               <h1 className="text-5xl font-bold leading-[1.1] tracking-tight text-white drop-shadow-md">
-                Pusat Komando Distribusi Pangan Indonesia
+                Pusat Optimasi Distribusi Pangan Indonesia
               </h1>
 
               <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-gray-200 drop-shadow">
