@@ -108,8 +108,9 @@ export class AlertsService {
       const zScore = stdDev > 0 ? (latest.price - avgPrice) / stdDev : 0;
 
       const absPctChange = Math.abs(pctChange);
-      const isSpike = pctChange >= 25;
-      const isDrop = pctChange <= -25;
+      // Threshold diperketat: Alert hanya muncul jika perubahan harga >= 45% (sebelumnya 25%)
+      const isSpike = pctChange >= 45;
+      const isDrop = pctChange <= -45;
 
       if (!isSpike && !isDrop) {
         continue;
@@ -136,10 +137,11 @@ export class AlertsService {
         continue;
       }
 
+      // Tingkat keparahan (severity) juga disesuaikan
       const severity =
-        absPctChange >= 40
+        absPctChange >= 65
           ? 'CRITICAL'
-          : absPctChange >= 30
+          : absPctChange >= 55
             ? 'HIGH'
             : 'MEDIUM';
       const direction = isSpike ? 'naik' : 'turun';
