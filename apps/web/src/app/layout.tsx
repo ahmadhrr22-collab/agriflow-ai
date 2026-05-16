@@ -16,6 +16,9 @@ export const metadata: Metadata = {
     icon: '/agriflow-logo.png',
     apple: '/agriflow-logo.png',
   },
+  other: {
+    'JuaraVibeCoding:email': 'ahmadhrr22@gmail.com',
+  },
 };
 
 export default function RootLayout({
