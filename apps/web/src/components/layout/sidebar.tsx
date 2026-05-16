@@ -12,6 +12,7 @@ import {
   Network,
   Bell,
   Settings,
+  LogOut,
 } from 'lucide-react';
 
 const navItems = [
@@ -115,19 +116,26 @@ export function Sidebar() {
           </Link>
         )})}
 
-        <div className="ag-card flex items-center gap-3 p-3">
+        <div className="ag-card flex items-center gap-3 p-2.5 transition-all">
           <div
-            className="h-9 w-9 rounded-full flex items-center justify-center text-xs font-semibold"
+            className="h-9 w-9 shrink-0 rounded-full flex items-center justify-center text-xs font-bold"
             style={{ background: '#EAF3DE', color: 'var(--ag-primary)' }}
           >
             AN
           </div>
           <div className="min-w-0 flex-1">
-            <div className="text-xs font-semibold truncate">Analyst</div>
-            <div className="text-xs truncate" style={{ color: 'var(--muted-foreground)' }}>
+            <div className="text-xs font-bold truncate">Analyst</div>
+            <div className="text-[11px] font-medium truncate" style={{ color: 'var(--muted-foreground)' }}>
               analyst@agriflow.ai
             </div>
           </div>
+          <Link
+            href="/"
+            className="shrink-0 flex items-center justify-center h-8 w-8 rounded-md transition-colors text-gray-400 hover:text-red-600 hover:bg-red-50"
+            title="Keluar dari sistem"
+          >
+            <LogOut size={16} strokeWidth={2.5} />
+          </Link>
         </div>
       </div>
     </aside>
