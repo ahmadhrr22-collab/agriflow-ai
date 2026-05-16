@@ -4,6 +4,7 @@ import { useEffect }         from 'react';
 import { useMarketInsight }  from '@/hooks/use-insights';
 import { useDashboardStore } from '@/store/dashboard.store';
 import { useCommodities }    from '@/hooks/use-prices';
+import { Sparkles, AlertTriangle, TrendingUp, RefreshCw } from 'lucide-react';
 
 const sentimentConfig = {
   bullish: { label: 'Bullish',  bg: '#EAF3DE', color: '#27500A', dot: '#166534' },
@@ -63,15 +64,11 @@ export function GeminiInsight() {
     }}>
       {/* Header */}
       <div className="flex items-center gap-2 mb-4">
-        <div className="w-6 h-6 rounded-lg flex items-center justify-center"
+        <div className="w-7 h-7 rounded-lg flex items-center justify-center"
           style={{background: '#EAF3DE'}}>
-          <span style={{fontSize: '12px'}}>✦</span>
+          <Sparkles className="w-3.5 h-3.5" style={{color: '#27500A'}} />
         </div>
         <span className="text-sm font-medium">AI Market Insight</span>
-        <span className="text-xs px-2 py-0.5 rounded-full ml-1"
-          style={{background: '#EAF3DE', color: '#27500A'}}>
-          Gemini
-        </span>
         <div className="ml-auto flex items-center gap-1.5">
           <div className="w-1.5 h-1.5 rounded-full"
             style={{background: sentiment.dot}}></div>
@@ -93,8 +90,8 @@ export function GeminiInsight() {
           background: '#FAEEDA',
           border: '0.5px solid #FAC775',
         }}>
-          <div className="text-xs font-medium mb-1" style={{color: '#633806'}}>
-            ⚠ Risiko
+          <div className="text-xs font-medium mb-1.5 flex items-center gap-1.5" style={{color: '#633806'}}>
+            <AlertTriangle className="w-3.5 h-3.5" /> Risiko
           </div>
           <div className="text-xs leading-relaxed" style={{color: '#854F0B'}}>
             {insight?.risk}
@@ -104,8 +101,8 @@ export function GeminiInsight() {
           background: '#EAF3DE',
           border: '0.5px solid #C0DD97',
         }}>
-          <div className="text-xs font-medium mb-1" style={{color: '#27500A'}}>
-            ↗ Rekomendasi
+          <div className="text-xs font-medium mb-1.5 flex items-center gap-1.5" style={{color: '#27500A'}}>
+            <TrendingUp className="w-3.5 h-3.5" /> Rekomendasi
           </div>
           <div className="text-xs leading-relaxed" style={{color: '#3B6D11'}}>
             {insight?.recommendation}
@@ -132,17 +129,17 @@ export function GeminiInsight() {
       {/* Footer */}
       <div className="mt-3 flex items-center justify-between">
         <span className="text-xs" style={{color: 'var(--muted-foreground)'}}>
-          Dianalisis oleh Gemini · {data?.commodity}
+          Dianalisis oleh Gemini AI · {data?.commodity}
         </span>
         <button
           onClick={() => selectedCommodity && mutate({
             commodity_id:   selectedCommodityId,
             commodity_name: selectedCommodity.localName,
           })}
-          className="text-xs font-medium"
+          className="text-xs font-medium flex items-center gap-1 hover:opacity-80 transition-opacity"
           style={{color: '#166534', cursor: 'pointer'}}
         >
-          Refresh ↺
+          <RefreshCw className="w-3 h-3" /> Refresh
         </button>
       </div>
     </div>

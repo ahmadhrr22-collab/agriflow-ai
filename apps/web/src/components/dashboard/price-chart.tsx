@@ -44,10 +44,10 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
               <span style={{ color: 'var(--muted-foreground)' }}>
                 {p.name === 'price'
-                  ? 'Aktual'
+                  ? 'Harga Aktual'
                   : p.name === 'predicted'
-                    ? 'Prediksi'
-                    : 'CI Range'}
+                    ? 'Harga Prediksi'
+                    : 'Rentang Harga'}
                 :
               </span>
 
@@ -239,7 +239,7 @@ export function PriceChart() {
               style={{ background: '#639922' }}
             />
 
-            CI 80%
+            Rentang Estimasi
           </div>
         </div>
       </div>
@@ -357,7 +357,7 @@ export function PriceChart() {
         }}
       >
         <span>
-          Model: Prophet + XGBoost Ensemble
+          Didukung oleh AI Predictive Analytics
         </span>
 
         {mape && (
@@ -365,7 +365,7 @@ export function PriceChart() {
             <span>·</span>
 
             <span>
-              MAPE:
+              Margin Kesalahan:
 
               <span
                 className="font-medium ml-1"
@@ -385,7 +385,7 @@ export function PriceChart() {
         )}
 
         <span style={{ marginLeft: 'auto' }}>
-          Confidence interval 80%
+          Tingkat Kepercayaan Data: 80%
         </span>
       </div>
     </div>
