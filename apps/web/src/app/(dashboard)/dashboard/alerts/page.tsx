@@ -82,7 +82,7 @@ export default function AlertsPage() {
             </div>
 
             <div className="flex flex-wrap justify-end gap-2">
-              {['Semua', 'PENDING', 'SENT', 'READ', 'DISMISSED'].map((status) => {
+              {['Semua', 'PENDING', 'READ', 'DISMISSED'].map((status) => {
                 const active = filter === status || (status === 'Semua' && !filter);
                 return (
                   <button

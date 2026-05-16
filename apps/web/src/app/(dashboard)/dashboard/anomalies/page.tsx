@@ -9,6 +9,7 @@ import {
 } from '@/hooks/use-prices';
 
 import { useAnomalies } from '@/hooks/use-anomalies';
+import { CustomSelect } from '@/components/ui/custom-select';
 
 import {
   LineChart,
@@ -200,66 +201,24 @@ export default function AnomaliesPage() {
             }}
           >
             Lonjakan harga tidak wajar ·
-            Statistical + Isolation Forest
+            Pemantauan AI Real-time
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-          {/* Commodity */}
-          <select
+          <CustomSelect
             value={commodityId}
-            onChange={(e) =>
-              setCommodityId(
-                e.target.value,
-              )
-            }
-            className="text-xs px-3 py-1.5 rounded-lg outline-none cursor-pointer"
-            style={{
-              border:
-                '0.5px solid var(--border)',
-              background:
-                'var(--background)',
-            }}
-          >
-            {commodities?.map(
-              (c: any) => (
-                <option
-                  key={c.id}
-                  value={c.id}
-                >
-                  {c.localName}
-                </option>
-              ),
-            )}
-          </select>
+            onChange={setCommodityId}
+            options={(commodities || []).map((c: any) => ({ id: c.id, label: c.localName }))}
+            className="min-w-[150px]"
+          />
 
-          {/* Region */}
-          <select
+          <CustomSelect
             value={regionId}
-            onChange={(e) =>
-              setRegionId(
-                e.target.value,
-              )
-            }
-            className="text-xs px-3 py-1.5 rounded-lg outline-none cursor-pointer"
-            style={{
-              border:
-                '0.5px solid var(--border)',
-              background:
-                'var(--background)',
-            }}
-          >
-            {regions?.map(
-              (r: any) => (
-                <option
-                  key={r.id}
-                  value={r.id}
-                >
-                  {r.name}
-                </option>
-              ),
-            )}
-          </select>
+            onChange={setRegionId}
+            options={(regions || []).map((r: any) => ({ id: r.id, label: r.name }))}
+            className="min-w-[150px]"
+          />
         </div>
       </div>
 
@@ -306,7 +265,7 @@ export default function AnomaliesPage() {
                 }`,
 
             sub:
-              'z-score > 3 atau pct > 20%',
+              'Kenaikan ekstrem',
 
             color: '#A32D2D',
           },
@@ -325,7 +284,7 @@ export default function AnomaliesPage() {
                 }`,
 
             sub:
-              'z-score > 2 atau pct > 10%',
+              'Kenaikan signifikan',
 
             color: '#633806',
           },
@@ -340,7 +299,7 @@ export default function AnomaliesPage() {
                   0
                 }`,
 
-            sub: 'hari historis',
+            sub: 'Riwayat data harian',
 
             color:
               'var(--foreground)',
@@ -593,11 +552,7 @@ export default function AnomaliesPage() {
                 'var(--muted-foreground)',
             }}
           >
-            Metode: Z-score
-            (threshold: 2.0) +
-            Perubahan 7 hari
-            (threshold: 10%) +
-            Isolation Forest
+            AI Engine: Agriflow Anomaly Detection System
           </div>
         </div>
 
@@ -756,7 +711,7 @@ export default function AnomaliesPage() {
                             'var(--muted-foreground)',
                         }}
                       >
-                        z: {a.z_score}
+                        Skor Anomali: {a.z_score}
                       </span>
 
                       <span
@@ -769,22 +724,7 @@ export default function AnomaliesPage() {
                             'var(--muted-foreground)',
                         }}
                       >
-                        Δ7d:{' '}
-                        {a.pct_change}%
-                      </span>
-
-                      <span
-                        className="text-xs px-1.5 py-0.5 rounded"
-                        style={{
-                          background:
-                            'var(--muted)',
-
-                          color:
-                            'var(--muted-foreground)',
-                        }}
-                      >
-                        signals:{' '}
-                        {a.signals}
+                        Lonjakan: {a.pct_change}%
                       </span>
                     </div>
                   </div>

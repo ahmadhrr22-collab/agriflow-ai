@@ -68,30 +68,6 @@ export function Header() {
           </p>
         </div>
       </div>
-
-      <div className="flex items-center gap-3">
-        <div className="ag-chip px-3 py-2">
-          <span className="h-1.5 w-1.5 rounded-full" style={{ background: '#1f7a4d' }} />
-          Live data
-        </div>
-
-        <select
-          className="ag-button h-10 px-3 text-sm outline-none cursor-pointer"
-          style={{ background: 'rgba(255,255,255,0.82)' }}
-        >
-          <option>Cabai Merah</option>
-          <option>Bawang Merah</option>
-          <option>Beras Medium</option>
-        </select>
-
-        <button
-          className="ag-button relative h-10 w-10 flex items-center justify-center text-sm font-semibold"
-          aria-label="Buka notifikasi"
-        >
-          !
-          <span className="absolute right-2 top-2 h-2 w-2 rounded-full" style={{ background: '#E24B4A' }} />
-        </button>
-      </div>
     </header>
   );
 }

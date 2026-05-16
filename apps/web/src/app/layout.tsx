@@ -8,10 +8,14 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: {
-    default: 'AgriFlow AI',
-    template: '%s | AgriFlow AI',
+    default: 'Agriflow.',
+    template: '%s | Agriflow.',
   },
   description: 'Food Supply Chain Intelligence Platform',
+  icons: {
+    icon: '/agriflow-logo.png',
+    apple: '/agriflow-logo.png',
+  },
 };
 
 export default function RootLayout({

@@ -4,17 +4,27 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useUnreadCount } from '@/hooks/use-alerts';
 
+import {
+  LayoutDashboard,
+  Map,
+  LineChart,
+  Activity,
+  Network,
+  Bell,
+  Settings,
+} from 'lucide-react';
+
 const navItems = [
-  { label: 'Overview', href: '/dashboard', icon: 'O' },
-  { label: 'Heatmap', href: '/dashboard/heatmap', icon: 'H' },
-  { label: 'Forecast', href: '/dashboard/forecast', icon: 'F' },
-  { label: 'Anomali', href: '/dashboard/anomalies', icon: 'A' },
-  { label: 'Rekomendasi', href: '/dashboard/recommendations', icon: 'R' },
-  { label: 'Alert', href: '/dashboard/alerts', icon: '!' },
+  { label: 'Overview', href: '/dashboard', icon: LayoutDashboard },
+  { label: 'Heatmap', href: '/dashboard/heatmap', icon: Map },
+  { label: 'Forecast', href: '/dashboard/forecast', icon: LineChart },
+  { label: 'Anomali', href: '/dashboard/anomalies', icon: Activity },
+  { label: 'Rekomendasi', href: '/dashboard/recommendations', icon: Network },
+  { label: 'Alert', href: '/dashboard/alerts', icon: Bell },
 ];
 
 const bottomItems = [
-  { label: 'Pengaturan', href: '/dashboard/settings', icon: 'S' },
+  { label: 'Pengaturan', href: '/dashboard/settings', icon: Settings },
 ];
 
 export function Sidebar() {
@@ -30,36 +40,10 @@ export function Sidebar() {
         backdropFilter: 'blur(18px)',
       }}
     >
-      <div className="ag-card-strong p-3">
-        <div className="flex items-center gap-3">
-          <div
-            className="h-10 w-10 rounded-lg flex items-center justify-center shrink-0"
-            style={{
-              background: 'linear-gradient(135deg, #0f4f2f, #1f7a4d)',
-              color: '#ffffff',
-              boxShadow: '0 10px 22px rgba(15, 79, 47, 0.22)',
-            }}
-          >
-            <span className="text-sm font-semibold">AG</span>
-          </div>
-          <div className="min-w-0">
-            <div className="text-sm font-semibold leading-none">AgriFlow AI</div>
-            <div className="text-xs mt-1" style={{ color: 'var(--muted-foreground)' }}>
-              Supply Chain Intel
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-4 ag-soft px-3 py-3">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold" style={{ color: 'var(--ag-primary)' }}>
-            Data pipeline
-          </span>
-          <span className="h-2 w-2 rounded-full animate-pulse" style={{ background: '#1f7a4d' }} />
-        </div>
-        <div className="mt-1 text-xs" style={{ color: 'var(--muted-foreground)' }}>
-          PIHPS real data, update 08.00 WIB
+      <div className="p-1 mb-2">
+        <div className="flex items-center gap-1">
+          <img src="/agriflow-logo.png" alt="Agriflow Logo" className="h-20 w-auto object-contain" />
+          <span className="text-xl font-bold -ml-3 -mt-1 text-gray-900">Agriflow.</span>
         </div>
       </div>
 
@@ -68,6 +52,8 @@ export function Sidebar() {
           const isActive =
             pathname === item.href ||
             (item.href !== '/dashboard' && pathname.startsWith(item.href));
+          
+          const Icon = item.icon;
 
           return (
             <Link
@@ -90,7 +76,7 @@ export function Sidebar() {
                   color: isActive ? '#ffffff' : 'var(--ag-primary)',
                 }}
               >
-                {item.icon}
+                <Icon size={14} strokeWidth={2.5} />
               </span>
               <span className="flex-1 truncate">{item.label}</span>
               {item.label === 'Alert' && Boolean(unreadCount) && (
@@ -110,7 +96,9 @@ export function Sidebar() {
       </nav>
 
       <div className="space-y-2 border-t pt-3" style={{ borderColor: 'var(--border)' }}>
-        {bottomItems.map((item) => (
+        {bottomItems.map((item) => {
+          const Icon = item.icon;
+          return (
           <Link
             key={item.href}
             href={item.href}
@@ -121,11 +109,11 @@ export function Sidebar() {
               className="flex h-6 w-6 items-center justify-center text-[11px] font-semibold"
               style={{ background: 'rgba(15, 79, 47, 0.07)', color: 'var(--ag-primary)', borderRadius: 7 }}
             >
-              {item.icon}
+              <Icon size={14} strokeWidth={2.5} />
             </span>
             {item.label}
           </Link>
-        ))}
+        )})}
 
         <div className="ag-card flex items-center gap-3 p-3">
           <div

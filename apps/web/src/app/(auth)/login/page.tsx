@@ -43,40 +43,34 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen ag-shell p-5">
       <div className="mx-auto grid min-h-[calc(100vh-40px)] max-w-6xl grid-cols-1 overflow-hidden rounded-[10px] border bg-white shadow-2xl lg:grid-cols-[1.08fr_0.92fr]" style={{ borderColor: 'var(--border)' }}>
-        <section
+          <section
           className="relative hidden flex-col justify-between overflow-hidden p-10 lg:flex"
           style={{
             backgroundImage:
-              'linear-gradient(180deg, rgba(15,79,47,0.18), rgba(15,79,47,0.88)), url(/agriculture-field.jpg)',
+              'linear-gradient(180deg, rgba(15,79,47,0.18), rgba(15,79,47,0.88)), url(/login-bg.webp)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
         >
-          <div className="flex items-center gap-3 text-white">
-            <div className="h-10 w-10 rounded-lg flex items-center justify-center text-sm font-semibold bg-white/16">
-              AG
-            </div>
-            <span className="font-semibold">AgriFlow AI</span>
+          <div className="flex items-center gap-1 text-white">
+            <img src="/agriflow-logo.png" alt="Agriflow Logo" className="h-32 w-auto object-contain" />
+            <span className="font-bold text-3xl -ml-3 -mt-2">Agriflow.</span>
           </div>
 
           <div className="max-w-xl">
             <div className="mb-5 inline-flex rounded-full border border-white/20 bg-white/12 px-3 py-1.5 text-xs font-semibold text-white/80">
-              Food supply intelligence
+              Intelijen pasokan pangan
             </div>
-            <h1 className="text-5xl font-semibold leading-tight text-white">
-              Monitor, predict, and move food supply with confidence.
+            <h1 className="text-4xl font-bold leading-snug text-white">
+              Pantau, prediksi, dan distribusikan pasokan pangan dengan penuh keyakinan.
             </h1>
-            <p className="mt-5 max-w-md text-sm leading-6 text-white/72">
-              Dashboard operasional untuk harga pangan, alert anomali, forecast,
-              dan rekomendasi distribusi berbasis data real.
-            </p>
           </div>
 
           <div className="grid grid-cols-3 gap-3">
             {[
               { value: '34', label: 'Provinsi' },
               { value: '5', label: 'Komoditas' },
-              { value: '08.00', label: 'Update WIB' },
+              { value: '08.00', label: 'Pembaruan WIB' },
             ].map((item) => (
               <div key={item.label} className="rounded-lg border border-white/16 bg-white/12 p-4 backdrop-blur">
                 <div className="text-2xl font-semibold text-white">{item.value}</div>
@@ -88,17 +82,14 @@ export default function LoginPage() {
 
         <section className="flex items-center justify-center p-8">
           <div className="w-full max-w-sm">
-            <div className="mb-10 flex items-center gap-3 lg:hidden">
-              <div className="h-9 w-9 rounded-lg flex items-center justify-center text-sm font-semibold text-white" style={{ background: 'var(--ag-primary)' }}>
-                AG
-              </div>
-              <span className="font-semibold">AgriFlow AI</span>
+            <div className="mb-10 flex items-center gap-1 lg:hidden">
+              <img src="/agriflow-logo.png" alt="Agriflow Logo" className="h-28 w-auto object-contain" />
+              <span className="font-bold text-2xl -ml-3 -mt-1">Agriflow.</span>
             </div>
 
-            <div className="ag-chip mb-5 px-3 py-1.5">Secure workspace</div>
-            <h2 className="text-3xl font-semibold tracking-tight">Masuk ke dashboard</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900">Masuk ke dashboard</h2>
             <p className="mt-2 text-sm" style={{ color: 'var(--muted-foreground)' }}>
-              Gunakan akun analyst untuk mengakses command center.
+              Gunakan akun kredensial untuk mengakses dashboard.
             </p>
 
             <form onSubmit={handleLogin} className="mt-8 space-y-4">
@@ -115,7 +106,7 @@ export default function LoginPage() {
               </div>
 
               <div>
-                <label className="mb-1.5 block text-xs font-semibold">Password</label>
+                <label className="mb-1.5 block text-xs font-semibold">Kata Sandi</label>
                 <input
                   type="password"
                   value={password}
@@ -148,7 +139,7 @@ export default function LoginPage() {
 
             <div className="ag-soft mt-6 p-3 text-xs" style={{ color: 'var(--muted-foreground)' }}>
               <div className="mb-1 font-semibold" style={{ color: 'var(--foreground)' }}>
-                Demo credentials
+                Kredensial demo
               </div>
               analyst@agriflow.ai / password123
             </div>

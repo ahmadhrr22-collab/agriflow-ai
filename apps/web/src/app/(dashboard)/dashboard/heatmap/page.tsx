@@ -4,6 +4,7 @@ import dynamic            from 'next/dynamic';
 import { useState }       from 'react';
 import { useHeatmap }     from '@/hooks/use-heatmap';
 import { useCommodities } from '@/hooks/use-prices';
+import { CustomSelect }   from '@/components/ui/custom-select';
 
 const HeatmapMap = dynamic(
   () => import('@/components/map/heatmap-map').then((m) => m.HeatmapMap),
@@ -15,33 +16,30 @@ const HeatmapMap = dynamic(
   )}
 );
 
-function DeviationLegend() {
-  const items = [
-    { color: '#E24B4A', label: '> +10% (sangat tinggi)' },
-    { color: '#EF9F27', label: '+5% s/d +10% (tinggi)' },
-    { color: '#166534', label: 'Normal (±5%)' },
-    { color: '#378ADD', label: '-5% s/d -10% (rendah)' },
-    { color: '#185FA5', label: '< -10% (sangat rendah)' },
-  ];
-
+function DeviationLegend({ commodityName }: { commodityName: string }) {
   return (
     <div className="rounded-xl p-4" style={{
       background: 'var(--background)',
       border: '0.5px solid var(--border)',
     }}>
       <div className="text-xs font-medium mb-3">
-        Deviasi dari rata-rata nasional
+        {commodityName} per KG
       </div>
-      <div className="space-y-2">
-        {items.map((item) => (
-          <div key={item.label} className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full flex-shrink-0"
-              style={{background: item.color}}></div>
-            <span className="text-xs" style={{color: 'var(--muted-foreground)'}}>
-              {item.label}
-            </span>
-          </div>
-        ))}
+      <div className="flex w-full h-4 mb-2">
+        <div className="flex-[1]" style={{ background: '#48BB78' }}></div>
+        <div className="flex-[1]" style={{ background: '#2F855A' }}></div>
+        <div className="flex-[1]" style={{ background: '#22543D' }}></div>
+        <div className="flex-[1]" style={{ background: '#E53E3E' }}></div>
+        <div className="flex-[1]" style={{ background: '#C53030' }}></div>
+        <div className="flex-[1]" style={{ background: '#8B0000' }}></div>
+        <div className="flex-[1]" style={{ background: '#A0AEC0' }}></div>
+        <div className="flex-[1]" style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderLeft: 'none' }}></div>
+      </div>
+      <div className="flex w-full text-[10px]" style={{color: 'var(--muted-foreground)'}}>
+        <div className="flex-[3] text-left leading-tight">Harga<br/>Terendah</div>
+        <div className="flex-[3] text-right leading-tight" style={{paddingRight: '4px'}}>Harga<br/>Tertinggi</div>
+        <div className="flex-[1] text-center leading-tight">Tidak<br/>Update</div>
+        <div className="flex-[1] text-center leading-tight">Tidak<br/>Ada Data</div>
       </div>
     </div>
   );
@@ -111,20 +109,12 @@ export default function HeatmapPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <select
+          <CustomSelect
             value={selectedCommodityId}
-            onChange={(e) => setSelectedCommodityId(e.target.value)}
-            className="text-xs px-3 py-1.5 rounded-lg outline-none cursor-pointer"
-            style={{
-              border: '0.5px solid var(--border)',
-              background: 'var(--background)',
-              color: 'var(--foreground)',
-            }}
-          >
-            {commodities?.map((c: any) => (
-              <option key={c.id} value={c.id}>{c.localName}</option>
-            ))}
-          </select>
+            onChange={setSelectedCommodityId}
+            options={(commodities || []).map((c: any) => ({ id: c.id, label: c.localName }))}
+            className="min-w-[150px]"
+          />
           {!isLoading && regions && (
             <span className="text-xs px-2.5 py-1 rounded-full" style={{
               background: '#EAF3DE',
@@ -192,7 +182,7 @@ export default function HeatmapPage() {
 
         {/* Sidebar */}
         <div className="space-y-4">
-          <DeviationLegend />
+          <DeviationLegend commodityName={selectedCommodity?.localName || 'Komoditas'} />
           {regions && <RegionTable regions={regions} />}
         </div>
       </div>

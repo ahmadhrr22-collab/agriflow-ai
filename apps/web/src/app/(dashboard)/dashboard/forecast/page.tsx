@@ -9,6 +9,7 @@ import {
 
 import { useForecast } from '@/hooks/use-forecasts';
 import { useAnomalies } from '@/hooks/use-anomalies';
+import { CustomSelect } from '@/components/ui/custom-select';
 
 import {
   ComposedChart,
@@ -65,7 +66,7 @@ const CustomTooltip = ({
             >
               {p.name === 'predicted'
                 ? 'Prediksi'
-                : 'CI Range'}
+                : 'Estimasi Rentang'}
               :
             </span>
 
@@ -201,7 +202,7 @@ export default function ForecastPage() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-sm font-medium">
-            Demand Forecast
+            Prakiraan Harga & Pasokan
           </h2>
 
           <p
@@ -212,66 +213,24 @@ export default function ForecastPage() {
             }}
           >
             Prediksi harga 7 hari ke depan ·
-            Prophet + XGBoost Ensemble
+            Didukung oleh AI Prediktif Agriflow
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-          {/* Commodity */}
-          <select
+          <CustomSelect
             value={commodityId}
-            onChange={(e) =>
-              setCommodityId(
-                e.target.value,
-              )
-            }
-            className="text-xs px-3 py-1.5 rounded-lg outline-none cursor-pointer"
-            style={{
-              border:
-                '0.5px solid var(--border)',
-              background:
-                'var(--background)',
-            }}
-          >
-            {commodities?.map(
-              (c: any) => (
-                <option
-                  key={c.id}
-                  value={c.id}
-                >
-                  {c.localName}
-                </option>
-              ),
-            )}
-          </select>
+            onChange={setCommodityId}
+            options={(commodities || []).map((c: any) => ({ id: c.id, label: c.localName }))}
+            className="min-w-[150px]"
+          />
 
-          {/* Region */}
-          <select
+          <CustomSelect
             value={regionId}
-            onChange={(e) =>
-              setRegionId(
-                e.target.value,
-              )
-            }
-            className="text-xs px-3 py-1.5 rounded-lg outline-none cursor-pointer"
-            style={{
-              border:
-                '0.5px solid var(--border)',
-              background:
-                'var(--background)',
-            }}
-          >
-            {regions?.map(
-              (r: any) => (
-                <option
-                  key={r.id}
-                  value={r.id}
-                >
-                  {r.name}
-                </option>
-              ),
-            )}
-          </select>
+            onChange={setRegionId}
+            options={(regions || []).map((r: any) => ({ id: r.id, label: r.name }))}
+            className="min-w-[150px]"
+          />
         </div>
       </div>
 
@@ -279,14 +238,14 @@ export default function ForecastPage() {
       <div className="grid grid-cols-4 gap-4">
         {[
           {
-            label: 'Model',
-            value: 'Ensemble',
-            sub: 'Prophet + XGBoost',
+            label: 'Status AI',
+            value: 'Aktif',
+            sub: 'Memantau harga pasar',
           },
           {
-            label: 'MAPE',
+            label: 'Tingkat Akurasi',
             value: forecastData
-              ? `${forecastData.mape}%`
+              ? `${(100 - forecastData.mape).toFixed(1)}%`
               : '-',
 
             sub:
@@ -300,14 +259,14 @@ export default function ForecastPage() {
                 : '#633806',
           },
           {
-            label: 'Data Points',
+            label: 'Data Pelatihan',
 
             value: forecastData
               ? `${forecastData.data_points}`
               : '-',
 
             sub:
-              'Hari historis dipakai',
+              'Riwayat data harian yang digunakan',
           },
           {
             label:
@@ -403,9 +362,7 @@ export default function ForecastPage() {
                   'var(--muted-foreground)',
               }}
             >
-              Prediksi 7 hari ke depan
-              dengan confidence interval
-              80%
+              Estimasi rentang harga 7 hari ke depan (akurasi 80%)
             </p>
           </div>
 
@@ -437,7 +394,7 @@ export default function ForecastPage() {
                 }}
               />
 
-              CI 80%
+              Rentang Prediksi
             </div>
           </div>
         </div>
@@ -542,13 +499,12 @@ export default function ForecastPage() {
           }}
         >
           <span>
-            Model: Prophet +
-            XGBoost Ensemble
+            AI Engine: Agriflow Predictive System
           </span>
 
           {forecastData?.mape && (
             <span>
-              MAPE:
+              Akurasi:
 
               <span
                 className="font-medium ml-1"
@@ -560,7 +516,7 @@ export default function ForecastPage() {
                       : '#633806',
                 }}
               >
-                {forecastData.mape}%
+                {(100 - forecastData.mape).toFixed(1)}%
               </span>
             </span>
           )}
