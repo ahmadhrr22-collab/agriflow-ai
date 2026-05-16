@@ -45,7 +45,7 @@ export function DataQualityBanner() {
         <div>
           <div className="font-semibold">Data Realtime</div>
           <div className="text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
-            Sumber data PIHPS Bank Indonesia dan BMKG
+            Sumber data real-time PIHPS. (Integrasi cuaca BMKG dalam pengembangan)
           </div>
         </div>
       </div>
