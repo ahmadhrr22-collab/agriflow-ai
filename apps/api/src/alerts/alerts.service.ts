@@ -31,7 +31,6 @@ export class AlertsService {
         region: { select: { id: true, name: true, province: true } },
       },
       orderBy: { createdAt: 'desc' },
-      take: 50,
     });
   }
 
