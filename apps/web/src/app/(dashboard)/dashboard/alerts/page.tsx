@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useAlerts, useMarkAsRead, useDismissAlert } from '@/hooks/use-alerts';
+import { useAlerts, useMarkAsRead, useDismissAlert, useUnreadCount } from '@/hooks/use-alerts';
 
 type AlertItem = {
   id: string;
@@ -50,12 +50,13 @@ function timeAgo(dateStr: string): string {
 export default function AlertsPage() {
   const [filter, setFilter] = useState<string | undefined>(undefined);
   const { data: alerts, isLoading } = useAlerts(filter);
+  const { data: realUnreadCount } = useUnreadCount();
   const { mutate: markRead } = useMarkAsRead();
   const { mutate: dismiss } = useDismissAlert();
 
   const allAlerts = (alerts || []) as AlertItem[];
   const criticalCount = allAlerts.filter((alert) => alert.severity === 'CRITICAL').length;
-  const unreadCount = allAlerts.filter((alert) => ['PENDING', 'SENT'].includes(alert.status)).length;
+  const unreadCount = realUnreadCount ?? allAlerts.filter((alert) => ['PENDING', 'SENT'].includes(alert.status)).length;
 
   return (
     <div className="space-y-5">
