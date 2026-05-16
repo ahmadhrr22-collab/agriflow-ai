@@ -10,6 +10,7 @@ import {
 
 import { useAnomalies } from '@/hooks/use-anomalies';
 import { CustomSelect } from '@/components/ui/custom-select';
+import { AlertTriangle, AlertOctagon, Activity, FileText } from 'lucide-react';
 
 import {
   LineChart,
@@ -227,16 +228,13 @@ export default function AnomaliesPage() {
         {[
           {
             label: 'Total Anomali',
-
             value: isLoading
               ? '-'
               : `${
                   anomalyData?.total_anomalies ||
                   0
                 }`,
-
             sub: '30 hari terakhir',
-
             color:
               (
                 anomalyData?.total_anomalies ||
@@ -249,11 +247,10 @@ export default function AnomaliesPage() {
                     ) > 0
                   ? '#633806'
                   : '#27500A',
+            icon: AlertTriangle,
           },
-
           {
-            label: 'Kritis',
-
+            label: 'Prioritas Kritis',
             value: isLoading
               ? '-'
               : `${
@@ -263,16 +260,13 @@ export default function AnomaliesPage() {
                       'critical',
                   ).length
                 }`,
-
             sub:
               'Kenaikan ekstrem',
-
             color: '#A32D2D',
+            icon: AlertOctagon,
           },
-
           {
-            label: 'Waspada',
-
+            label: 'Perlu Diwaspadai',
             value: isLoading
               ? '-'
               : `${
@@ -282,67 +276,56 @@ export default function AnomaliesPage() {
                       'warning',
                   ).length
                 }`,
-
             sub:
               'Kenaikan signifikan',
-
             color: '#633806',
+            icon: Activity,
           },
-
           {
-            label: 'Data Dianalisis',
-
+            label: 'Volume Data Dianalisis',
             value: isLoading
               ? '-'
               : `${
                   anomalyData?.data_points ||
                   0
                 }`,
-
             sub: 'Riwayat data harian',
-
             color:
               'var(--foreground)',
+            icon: FileText,
           },
         ].map((m) => (
           <div
             key={m.label}
-            className="rounded-xl p-4"
+            className="rounded-xl p-4 flex items-start gap-3"
             style={{
-              background:
-                'var(--background)',
-
-              border:
-                '0.5px solid var(--border)',
+              background: 'var(--background)',
+              border: '0.5px solid var(--border)',
+              boxShadow: '0 1px 2px rgba(0,0,0,0.02)'
             }}
           >
-            <div
-              className="text-xs mb-2"
-              style={{
-                color:
-                  'var(--muted-foreground)',
-              }}
-            >
-              {m.label}
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: '#F1EFE8', color: '#444441' }}>
+              <m.icon className="w-4 h-4" />
             </div>
-
-            <div
-              className="text-2xl font-medium mb-1"
-              style={{
-                color: m.color,
-              }}
-            >
-              {m.value}
-            </div>
-
-            <div
-              className="text-xs"
-              style={{
-                color:
-                  'var(--muted-foreground)',
-              }}
-            >
-              {m.sub}
+            <div>
+              <div
+                className="text-xs mb-1 font-medium"
+                style={{ color: 'var(--muted-foreground)' }}
+              >
+                {m.label}
+              </div>
+              <div
+                className="text-2xl font-bold mb-0.5"
+                style={{ color: m.color || 'var(--foreground)' }}
+              >
+                {m.value}
+              </div>
+              <div
+                className="text-[11px]"
+                style={{ color: 'var(--muted-foreground)' }}
+              >
+                {m.sub}
+              </div>
             </div>
           </div>
         ))}

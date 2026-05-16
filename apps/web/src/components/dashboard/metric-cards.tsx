@@ -80,7 +80,7 @@ export function MetricCards() {
         return (
           <div key={metric.label} className="ag-card-strong p-4 overflow-hidden">
             <div className="flex items-start justify-between gap-3">
-              <div className="text-xs font-semibold uppercase tracking-[0.12em]" style={{ color: 'var(--muted-foreground)' }}>
+              <div className="text-xs font-bold uppercase tracking-[0.1em]" style={{ color: 'var(--muted-foreground)' }}>
                 {metric.label}
               </div>
               <span
@@ -91,8 +91,8 @@ export function MetricCards() {
               />
             </div>
 
-            <div className="mt-4 text-2xl font-semibold tracking-tight">{metric.value}</div>
-            <div className="mt-1 text-xs truncate" style={{ color: 'var(--muted-foreground)' }}>
+            <div className="mt-3 text-2xl font-bold tracking-tight">{metric.value}</div>
+            <div className="mt-1 text-[11px] font-medium truncate" style={{ color: 'var(--muted-foreground)' }}>
               {metric.meta}
             </div>
 

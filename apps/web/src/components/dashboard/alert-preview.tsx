@@ -30,12 +30,12 @@ export function AlertPreview() {
     <div className="ag-card-strong p-4">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-sm font-semibold">Alert Terbaru</h3>
-          <p className="text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
-            Sinyal risiko dari data real
+          <h3 className="text-sm font-bold">Alert Terbaru</h3>
+          <p className="text-[11px] font-medium mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
+            Sinyal risiko dari data riil
           </p>
         </div>
-        <Link href="/dashboard/alerts" className="ag-button px-2.5 py-1.5 text-xs font-semibold">
+        <Link href="/dashboard/alerts" className="ag-button px-2.5 py-1.5 text-xs font-bold">
           Lihat semua
         </Link>
       </div>
@@ -59,7 +59,7 @@ export function AlertPreview() {
               <div key={alert.id} className="ag-soft flex items-start gap-3 p-3">
                 <span className="mt-1.5 h-2 w-2 rounded-full shrink-0" style={{ background: cfg.border }} />
                 <div className="min-w-0 flex-1">
-                  <div className="text-xs font-semibold truncate" style={{ color: cfg.text }}>
+                  <div className="text-xs font-bold truncate" style={{ color: cfg.text }}>
                     {alert.title}
                   </div>
                   <div className="text-xs mt-1 truncate" style={{ color: 'var(--muted-foreground)' }}>

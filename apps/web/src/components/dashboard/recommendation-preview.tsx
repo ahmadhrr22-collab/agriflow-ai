@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { useDashboardStore } from '@/store/dashboard.store';
 import aiApi from '@/lib/ai-api';
+import { ArrowRight } from 'lucide-react';
 
 type Recommendation = {
   origin_region_id: string;
@@ -35,12 +36,12 @@ export function RecommendationPreview() {
     <div className="ag-card-strong p-4">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-sm font-semibold">Rekomendasi</h3>
-          <p className="text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
+          <h3 className="text-sm font-bold">Rekomendasi</h3>
+          <p className="text-[11px] font-medium mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
             Rute distribusi prioritas
           </p>
         </div>
-        <Link href="/dashboard/recommendations" className="ag-button px-2.5 py-1.5 text-xs font-semibold">
+        <Link href="/dashboard/recommendations" className="ag-button px-2.5 py-1.5 text-xs font-bold">
           Lihat semua
         </Link>
       </div>
@@ -60,9 +61,9 @@ export function RecommendationPreview() {
           {recommendations.map((rec) => (
             <div key={`${rec.origin_region_id}-${rec.dest_region_id}`} className="ag-soft p-3">
               <div className="flex items-center justify-between gap-3">
-                <div className="min-w-0 text-xs font-semibold truncate">
+                <div className="min-w-0 flex items-center gap-1.5 text-xs font-bold truncate">
                   {rec.origin_name}
-                  <span className="mx-1.5" style={{ color: 'var(--ag-primary)' }}>to</span>
+                  <ArrowRight className="w-3.5 h-3.5 opacity-60" style={{ color: 'var(--ag-primary)' }} />
                   {rec.dest_name}
                 </div>
                 <span className="ag-chip px-2 py-0.5 shrink-0">

@@ -10,6 +10,7 @@ import {
 import { useForecast } from '@/hooks/use-forecasts';
 import { useAnomalies } from '@/hooks/use-anomalies';
 import { CustomSelect } from '@/components/ui/custom-select';
+import { BrainCircuit, Target, Database, AlertTriangle } from 'lucide-react';
 
 import {
   ComposedChart,
@@ -238,48 +239,44 @@ export default function ForecastPage() {
       <div className="grid grid-cols-4 gap-4">
         {[
           {
-            label: 'Status AI',
+            label: 'Status AI Prediktif',
             value: 'Aktif',
             sub: 'Memantau harga pasar',
+            icon: BrainCircuit,
           },
           {
-            label: 'Tingkat Akurasi',
+            label: 'Tingkat Akurasi Prediksi',
             value: forecastData
               ? `${(100 - forecastData.mape).toFixed(1)}%`
               : '-',
-
             sub:
               forecastData?.mape < 10
-                ? '✓ Akurasi tinggi'
+                ? 'Akurasi tinggi'
                 : 'Akurasi sedang',
-
             color:
               forecastData?.mape < 10
                 ? '#27500A'
                 : '#633806',
+            icon: Target,
           },
           {
-            label: 'Data Pelatihan',
-
+            label: 'Volume Data Pelatihan',
             value: forecastData
               ? `${forecastData.data_points}`
               : '-',
-
             sub:
-              'Riwayat data harian yang digunakan',
+              'Riwayat data harian',
+            icon: Database,
           },
           {
             label:
-              'Anomali Terdeteksi',
-
+              'Deteksi Anomali',
             value: `${
               anomalyData?.total_anomalies ||
               0
             }`,
-
             sub:
               '30 hari terakhir',
-
             color:
               (
                 anomalyData?.total_anomalies ||
@@ -287,48 +284,40 @@ export default function ForecastPage() {
               ) > 0
                 ? '#A32D2D'
                 : '#27500A',
+            icon: AlertTriangle,
           },
         ].map((m) => (
           <div
             key={m.label}
-            className="rounded-xl p-4"
+            className="rounded-xl p-4 flex items-start gap-3"
             style={{
-              background:
-                'var(--background)',
-
-              border:
-                '0.5px solid var(--border)',
+              background: 'var(--background)',
+              border: '0.5px solid var(--border)',
+              boxShadow: '0 1px 2px rgba(0,0,0,0.02)'
             }}
           >
-            <div
-              className="text-xs mb-2"
-              style={{
-                color:
-                  'var(--muted-foreground)',
-              }}
-            >
-              {m.label}
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: '#F1EFE8', color: '#444441' }}>
+              <m.icon className="w-4 h-4" />
             </div>
-
-            <div
-              className="text-xl font-medium mb-1"
-              style={{
-                color:
-                  m.color ||
-                  'var(--foreground)',
-              }}
-            >
-              {m.value}
-            </div>
-
-            <div
-              className="text-xs"
-              style={{
-                color:
-                  'var(--muted-foreground)',
-              }}
-            >
-              {m.sub}
+            <div>
+              <div
+                className="text-xs mb-1 font-medium"
+                style={{ color: 'var(--muted-foreground)' }}
+              >
+                {m.label}
+              </div>
+              <div
+                className="text-2xl font-bold mb-0.5"
+                style={{ color: m.color || 'var(--foreground)' }}
+              >
+                {m.value}
+              </div>
+              <div
+                className="text-[11px]"
+                style={{ color: 'var(--muted-foreground)' }}
+              >
+                {m.sub}
+              </div>
             </div>
           </div>
         ))}

@@ -106,19 +106,19 @@ export default function AlertsPage() {
 
         <div className="grid grid-cols-4 divide-x" style={{ borderColor: 'var(--border)' }}>
           {[
-            { label: 'Total Alert', value: allAlerts.length, sub: 'semua status', color: 'var(--foreground)' },
-            { label: 'Belum Dibaca', value: unreadCount, sub: 'perlu perhatian', color: unreadCount > 0 ? '#A32D2D' : 'var(--ag-primary)' },
-            { label: 'Kritis', value: criticalCount, sub: 'prioritas tinggi', color: criticalCount > 0 ? '#A32D2D' : 'var(--ag-primary)' },
-            { label: 'Sistem', value: 'Aktif', sub: 'monitoring real-time', color: 'var(--ag-primary)' },
+            { label: 'Total Notifikasi', value: allAlerts.length, sub: 'semua status', color: 'var(--foreground)' },
+            { label: 'Tindakan Tertunda', value: unreadCount, sub: 'perlu perhatian', color: unreadCount > 0 ? '#A32D2D' : 'var(--ag-primary)' },
+            { label: 'Prioritas Kritis', value: criticalCount, sub: 'prioritas tinggi', color: criticalCount > 0 ? '#A32D2D' : 'var(--ag-primary)' },
+            { label: 'Status Sistem', value: 'Aktif', sub: 'monitoring real-time', color: 'var(--ag-primary)' },
           ].map((metric) => (
             <div key={metric.label} className="p-5">
-              <div className="text-xs font-semibold uppercase tracking-[0.12em]" style={{ color: 'var(--muted-foreground)' }}>
+              <div className="text-xs font-bold uppercase tracking-[0.1em]" style={{ color: 'var(--muted-foreground)' }}>
                 {metric.label}
               </div>
-              <div className="mt-3 text-3xl font-semibold" style={{ color: metric.color }}>
+              <div className="mt-3 text-2xl font-bold" style={{ color: metric.color }}>
                 {metric.value}
               </div>
-              <div className="mt-1 text-xs" style={{ color: 'var(--muted-foreground)' }}>
+              <div className="mt-1 text-[11px] font-medium" style={{ color: 'var(--muted-foreground)' }}>
                 {metric.sub}
               </div>
             </div>
