@@ -2,69 +2,106 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useUnreadCount } from '@/hooks/use-alerts';
 
 const navItems = [
-  { label: 'Overview',       href: '/dashboard',                icon: '◈' },
-  { label: 'Heatmap',        href: '/dashboard/heatmap',        icon: '◉' },
-  { label: 'Forecast',       href: '/dashboard/forecast',       icon: '◌' },
-  { label: 'Anomali',        href: '/dashboard/anomalies',      icon: '◎' },
-  { label: 'Rekomendasi',    href: '/dashboard/recommendations', icon: '◍' },
-  { label: 'Alert',          href: '/dashboard/alerts',         icon: '◆' },
+  { label: 'Overview', href: '/dashboard', icon: 'O' },
+  { label: 'Heatmap', href: '/dashboard/heatmap', icon: 'H' },
+  { label: 'Forecast', href: '/dashboard/forecast', icon: 'F' },
+  { label: 'Anomali', href: '/dashboard/anomalies', icon: 'A' },
+  { label: 'Rekomendasi', href: '/dashboard/recommendations', icon: 'R' },
+  { label: 'Alert', href: '/dashboard/alerts', icon: '!' },
 ];
 
 const bottomItems = [
-  { label: 'Pengaturan', href: '/dashboard/settings', icon: '◇' },
+  { label: 'Pengaturan', href: '/dashboard/settings', icon: 'S' },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { data: unreadCount } = useUnreadCount();
 
   return (
-    <aside className="w-[220px] h-screen flex flex-col shrink-0" style={{
-      background: 'var(--background)',
-      borderRight: '0.5px solid var(--border)',
-    }}>
-      {/* Logo */}
-      <div className="flex items-center gap-3 px-4 py-4" style={{borderBottom: '0.5px solid var(--border)'}}>
-        <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{background: '#166534'}}>
-          <span className="text-white font-medium text-sm">AG</span>
-        </div>
-        <div>
-          <div className="text-sm font-medium leading-none">AgriFlow AI</div>
-          <div className="text-xs mt-1" style={{color: 'var(--muted-foreground)'}}>
-            Supply Chain Intel
+    <aside
+      className="w-[248px] h-screen flex flex-col shrink-0 px-4 py-4"
+      style={{
+        background: 'rgba(255, 253, 247, 0.86)',
+        borderRight: '1px solid rgba(230, 224, 210, 0.88)',
+        backdropFilter: 'blur(18px)',
+      }}
+    >
+      <div className="ag-card-strong p-3">
+        <div className="flex items-center gap-3">
+          <div
+            className="h-10 w-10 rounded-lg flex items-center justify-center shrink-0"
+            style={{
+              background: 'linear-gradient(135deg, #0f4f2f, #1f7a4d)',
+              color: '#ffffff',
+              boxShadow: '0 10px 22px rgba(15, 79, 47, 0.22)',
+            }}
+          >
+            <span className="text-sm font-semibold">AG</span>
+          </div>
+          <div className="min-w-0">
+            <div className="text-sm font-semibold leading-none">AgriFlow AI</div>
+            <div className="text-xs mt-1" style={{ color: 'var(--muted-foreground)' }}>
+              Supply Chain Intel
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Status bar */}
-      <div className="mx-3 my-2 px-3 py-2 rounded-lg flex items-center gap-2" style={{background: '#EAF3DE'}}>
-        <div className="w-1.5 h-1.5 rounded-full" style={{background: '#166534'}}></div>
-        <span className="text-xs font-medium" style={{color: '#27500A'}}>Data live · 07.00 WIB</span>
+      <div className="mt-4 ag-soft px-3 py-3">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-semibold" style={{ color: 'var(--ag-primary)' }}>
+            Data pipeline
+          </span>
+          <span className="h-2 w-2 rounded-full animate-pulse" style={{ background: '#1f7a4d' }} />
+        </div>
+        <div className="mt-1 text-xs" style={{ color: 'var(--muted-foreground)' }}>
+          PIHPS real data, update 08.00 WIB
+        </div>
       </div>
 
-      {/* Nav items */}
-      <nav className="flex-1 px-3 py-2 flex flex-col gap-0.5">
+      <nav className="mt-5 flex-1 flex flex-col gap-1">
         {navItems.map((item) => {
-          const isActive = pathname === item.href ||
+          const isActive =
+            pathname === item.href ||
             (item.href !== '/dashboard' && pathname.startsWith(item.href));
+
           return (
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors"
+              className="group flex items-center gap-3 px-3 py-2.5 text-sm transition-all"
               style={{
-                background: isActive ? '#EAF3DE' : 'transparent',
-                color: isActive ? '#166534' : 'var(--muted-foreground)',
-                fontWeight: isActive ? 500 : 400,
+                borderRadius: 8,
+                background: isActive ? '#0f4f2f' : 'transparent',
+                color: isActive ? '#ffffff' : 'var(--muted-foreground)',
+                fontWeight: isActive ? 600 : 500,
+                boxShadow: isActive ? '0 12px 24px rgba(15, 79, 47, 0.18)' : 'none',
               }}
             >
-              <span style={{fontSize: '12px'}}>{item.icon}</span>
-              {item.label}
-              {item.label === 'Alert' && (
-                <span className="ml-auto text-xs px-1.5 py-0.5 rounded-full font-medium"
-                  style={{background: '#FCEBEB', color: '#A32D2D'}}>
-                  3
+              <span
+                className="flex h-6 w-6 items-center justify-center text-[11px] font-semibold"
+                style={{
+                  borderRadius: 7,
+                  background: isActive ? 'rgba(255,255,255,0.16)' : 'rgba(15, 79, 47, 0.07)',
+                  color: isActive ? '#ffffff' : 'var(--ag-primary)',
+                }}
+              >
+                {item.icon}
+              </span>
+              <span className="flex-1 truncate">{item.label}</span>
+              {item.label === 'Alert' && Boolean(unreadCount) && (
+                <span
+                  className="min-w-5 rounded-full px-1.5 py-0.5 text-center text-[11px] font-semibold"
+                  style={{
+                    background: isActive ? 'rgba(255,255,255,0.18)' : '#FCEBEB',
+                    color: isActive ? '#ffffff' : '#A32D2D',
+                  }}
+                >
+                  {unreadCount}
                 </span>
               )}
             </Link>
@@ -72,29 +109,34 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Bottom */}
-      <div className="px-3 py-3" style={{borderTop: '0.5px solid var(--border)'}}>
+      <div className="space-y-2 border-t pt-3" style={{ borderColor: 'var(--border)' }}>
         {bottomItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}
-            className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm"
-            style={{color: 'var(--muted-foreground)'}}
+            className="flex items-center gap-3 px-3 py-2 text-sm font-medium"
+            style={{ color: 'var(--muted-foreground)', borderRadius: 8 }}
           >
-            <span style={{fontSize: '12px'}}>{item.icon}</span>
+            <span
+              className="flex h-6 w-6 items-center justify-center text-[11px] font-semibold"
+              style={{ background: 'rgba(15, 79, 47, 0.07)', color: 'var(--ag-primary)', borderRadius: 7 }}
+            >
+              {item.icon}
+            </span>
             {item.label}
           </Link>
         ))}
-        {/* User info */}
-        <div className="flex items-center gap-3 px-3 py-2 mt-1 rounded-lg cursor-pointer"
-          style={{background: 'var(--muted)'}}>
-          <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium"
-            style={{background: '#EAF3DE', color: '#166534'}}>
+
+        <div className="ag-card flex items-center gap-3 p-3">
+          <div
+            className="h-9 w-9 rounded-full flex items-center justify-center text-xs font-semibold"
+            style={{ background: '#EAF3DE', color: 'var(--ag-primary)' }}
+          >
             AN
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="text-xs font-medium truncate">Analyst</div>
-            <div className="text-xs truncate" style={{color: 'var(--muted-foreground)'}}>
+          <div className="min-w-0 flex-1">
+            <div className="text-xs font-semibold truncate">Analyst</div>
+            <div className="text-xs truncate" style={{ color: 'var(--muted-foreground)' }}>
               analyst@agriflow.ai
             </div>
           </div>

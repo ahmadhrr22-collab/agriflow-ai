@@ -21,69 +21,62 @@ export function RecommendationPreview() {
     queryKey: ['recommendations-preview', selectedCommodityId],
     queryFn: async () => {
       const res = await aiApi.get(
-        `/recommendations/generate?commodity_id=${selectedCommodityId}&top_n=2`
+        `/recommendations/generate?commodity_id=${selectedCommodityId}&top_n=2`,
       );
       return res.data;
     },
-    enabled: !!selectedCommodityId,
+    enabled: Boolean(selectedCommodityId),
     refetchInterval: 1000 * 60 * 10,
   });
 
   const recommendations = (data?.recommendations || []) as Recommendation[];
 
   return (
-    <div className="rounded-xl p-4" style={{
-      background: 'var(--background)',
-      border: '0.5px solid var(--border)',
-    }}>
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-medium">Rekomendasi</h3>
-        <Link href="/dashboard/recommendations"
-          className="text-xs font-medium"
-          style={{color: '#166634'}}>
-          Lihat semua →
+    <div className="ag-card-strong p-4">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h3 className="text-sm font-semibold">Rekomendasi</h3>
+          <p className="text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
+            Rute distribusi prioritas
+          </p>
+        </div>
+        <Link href="/dashboard/recommendations" className="ag-button px-2.5 py-1.5 text-xs font-semibold">
+          Lihat semua
         </Link>
       </div>
 
       {isLoading ? (
         <div className="space-y-2">
-          {[1, 2].map((i) => (
-            <div key={i} className="h-16 rounded-lg animate-pulse"
-              style={{background: 'var(--muted)'}}></div>
+          {[1, 2].map((index) => (
+            <div key={index} className="h-20 rounded-lg animate-pulse" style={{ background: 'var(--muted)' }} />
           ))}
         </div>
       ) : recommendations.length === 0 ? (
-        <div className="text-xs text-center py-4"
-          style={{color: 'var(--muted-foreground)'}}>
+        <div className="ag-soft py-6 text-center text-xs" style={{ color: 'var(--muted-foreground)' }}>
           Tidak ada rekomendasi saat ini
         </div>
       ) : (
         <div className="space-y-2">
           {recommendations.map((rec) => (
-            <div key={`${rec.origin_region_id}-${rec.dest_region_id}`}
-              className="p-3 rounded-lg" style={{
-                background: 'var(--muted)',
-                border: '0.5px solid var(--border)',
-              }}>
-              <div className="flex items-center justify-between mb-1.5">
-                <div className="text-xs font-medium">
+            <div key={`${rec.origin_region_id}-${rec.dest_region_id}`} className="ag-soft p-3">
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0 text-xs font-semibold truncate">
                   {rec.origin_name}
-                  <span className="mx-1.5" style={{color: '#166534'}}>→</span>
+                  <span className="mx-1.5" style={{ color: 'var(--ag-primary)' }}>to</span>
                   {rec.dest_name}
                 </div>
-                <span className="text-xs font-medium px-1.5 py-0.5 rounded-full"
-                  style={{background: '#EAF3DE', color: '#27500A'}}>
+                <span className="ag-chip px-2 py-0.5 shrink-0">
                   {(rec.score * 100).toFixed(0)}%
                 </span>
               </div>
-              <div className="text-xs" style={{color: 'var(--muted-foreground)'}}>
+              <div className="mt-2 text-xs line-clamp-2" style={{ color: 'var(--muted-foreground)' }}>
                 {rec.reasons?.[0] || 'Selisih harga antar wilayah'}
               </div>
-              <div className="mt-2 h-1 rounded-full overflow-hidden"
-                style={{background: 'var(--border)'}}>
-                <div className="h-full rounded-full"
-                  style={{width: `${rec.score * 100}%`, background: '#639922'}}>
-                </div>
+              <div className="mt-3 h-1.5 rounded-full overflow-hidden" style={{ background: '#dfe8d2' }}>
+                <div
+                  className="h-full rounded-full"
+                  style={{ width: `${Math.min(100, rec.score * 100)}%`, background: 'var(--ag-primary)' }}
+                />
               </div>
             </div>
           ))}

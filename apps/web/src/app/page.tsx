@@ -1,207 +1,125 @@
 import Link from 'next/link';
 
-const features = [
-  {
-    icon: '◉',
-    title: 'Heatmap Regional',
-    desc: 'Visualisasi distribusi harga per wilayah secara real-time. Identifikasi surplus dan defisit dengan peta interaktif.',
-  },
-  {
-    icon: '◌',
-    title: 'Demand Forecast',
-    desc: 'Prediksi harga 7 hari ke depan menggunakan ensemble Prophet + XGBoost dengan confidence interval 80%.',
-  },
-  {
-    icon: '◎',
-    title: 'Deteksi Anomali',
-    desc: 'Deteksi lonjakan harga tidak wajar menggunakan Z-score statistik dan Isolation Forest secara otomatis.',
-  },
-  {
-    icon: '◍',
-    title: 'Rekomendasi Distribusi',
-    desc: 'Saran pengiriman berbasis skor dari wilayah surplus ke defisit, lengkap dengan penjelasan dan confidence level.',
-  },
-  {
-    icon: '✦',
-    title: 'AI Market Insight',
-    desc: 'Narasi analisis pasar yang dihasilkan Gemini AI — ringkasan kondisi, risiko, dan rekomendasi aksi dalam bahasa natural.',
-  },
-  {
-    icon: '◆',
-    title: 'Alert System',
-    desc: 'Early warning otomatis untuk lonjakan harga, potensi shortage, dan pola distribusi tidak normal.',
-  },
-];
-
 const stats = [
-  { value: '10', label: 'Region Dipantau' },
-  { value: '3', label: 'Komoditas Aktif' },
-  { value: '5.54%', label: 'MAPE Forecast' },
-  { value: '85%', label: 'Confidence Score' },
+  { value: '34', label: 'Provinsi PIHPS' },
+  { value: '5', label: 'Komoditas utama' },
+  { value: '08.00', label: 'Update WIB' },
+  { value: 'Real', label: 'Data pipeline' },
 ];
 
-const users = [
-  {
-    role: 'Distributor',
-    desc: 'Optimalkan rute distribusi berdasarkan data harga real-time dan rekomendasi AI.',
-    icon: '◈',
-  },
-  {
-    role: 'Off-taker & Retailer',
-    desc: 'Antisipasi kenaikan harga dengan forecast 7 hari dan alert dini sebelum terjadi kelangkaan.',
-    icon: '◉',
-  },
-  {
-    role: 'Analyst & Regulator',
-    desc: 'Pantau stabilitas harga nasional, deteksi anomali, dan buat keputusan berbasis data.',
-    icon: '◎',
-  },
+const features = [
+  'Heatmap harga regional',
+  'Forecast demand 7 hari',
+  'Alert anomali harga real',
+  'Rekomendasi distribusi',
 ];
 
 export default function LandingPage() {
   return (
-    <div
-      style={{
-        background: 'var(--background)',
-        color: 'var(--foreground)',
-        minHeight: '100vh',
-      }}
-    >
-      {/* Navbar */}
-      <nav
-        className="flex items-center justify-between px-8 py-4 sticky top-0 z-50"
-        style={{
-          background: 'rgba(255,255,255,0.85)',
-          backdropFilter: 'blur(12px)',
-          borderBottom: '0.5px solid var(--border)',
-        }}
-      >
-        <div className="flex items-center gap-2.5">
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{ background: '#166534' }}
-          >
-            <span className="text-white font-medium text-sm">AG</span>
+    <main className="min-h-screen ag-shell px-5 py-5">
+      <div className="mx-auto max-w-6xl overflow-hidden rounded-[10px] border bg-white shadow-2xl" style={{ borderColor: 'var(--border)' }}>
+        <nav className="flex items-center justify-between px-7 py-4">
+          <div className="flex items-center gap-3">
+            <div
+              className="h-9 w-9 rounded-lg flex items-center justify-center text-sm font-semibold"
+              style={{ background: 'var(--ag-primary)', color: '#fff' }}
+            >
+              AG
+            </div>
+            <span className="text-sm font-semibold">AgriFlow AI</span>
           </div>
 
-          <span className="font-medium">AgriFlow AI</span>
-        </div>
+          <div className="hidden md:flex items-center gap-2 rounded-full border bg-white px-2 py-1 text-xs" style={{ borderColor: 'var(--border)' }}>
+            {['Home', 'Data', 'Insight', 'Alert'].map((item) => (
+              <span key={item} className="rounded-full px-3 py-1.5" style={{ color: 'var(--muted-foreground)' }}>
+                {item}
+              </span>
+            ))}
+          </div>
 
-        <div
-          className="flex items-center gap-6 text-sm"
-          style={{ color: 'var(--muted-foreground)' }}
-        >
-          <a
-            href="#features"
-            className="hover:text-foreground transition-colors"
-          >
-            Fitur
-          </a>
-
-          <a
-            href="#users"
-            className="hover:text-foreground transition-colors"
-          >
-            Pengguna
-          </a>
-
-          <a
-            href="#stats"
-            className="hover:text-foreground transition-colors"
-          >
-            Data
-          </a>
-        </div>
-
-        <Link
-          href="/login"
-          className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-opacity hover:opacity-90"
-          style={{ background: '#166534' }}
-        >
-          Masuk ke Dashboard
-        </Link>
-      </nav>
-
-      {/* Hero */}
-      <section className="px-8 py-24 max-w-5xl mx-auto text-center">
-        <div
-          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-8"
-          style={{
-            background: '#EAF3DE',
-            color: '#27500A',
-            border: '0.5px solid #C0DD97',
-          }}
-        >
-          <div
-            className="w-1.5 h-1.5 rounded-full animate-pulse"
-            style={{ background: '#166534' }}
-          ></div>
-
-          Platform Kecerdasan Supply Chain Pangan Indonesia
-        </div>
-
-        <h1 className="text-5xl font-medium leading-tight mb-6">
-          Distribusi pangan
-          <br />
-          <span style={{ color: '#166534' }}>
-            yang lebih cerdas.
-          </span>
-        </h1>
-
-        <p
-          className="text-lg max-w-2xl mx-auto mb-10"
-          style={{ color: 'var(--muted-foreground)' }}
-        >
-          AgriFlow AI menggabungkan machine learning dan Gemini AI untuk
-          memberikan insight distribusi pangan berbasis data — bukan intuisi.
-        </p>
-
-        {/* FIXED SECTION */}
-        <div className="flex items-center justify-center gap-4">
-          <Link
-            href="/login"
-            className="px-6 py-3 rounded-xl text-sm font-medium text-white transition-opacity hover:opacity-90"
-            style={{ background: '#166534' }}
-          >
-            Coba Dashboard →
+          <Link href="/login" className="ag-button px-4 py-2 text-xs font-semibold">
+            Masuk
           </Link>
+        </nav>
 
-          <a
-            href="#features"
-            className="px-6 py-3 rounded-xl text-sm font-medium transition-colors"
+        <section className="px-7 pb-7">
+          <div
+            className="relative min-h-[560px] overflow-hidden rounded-[10px]"
             style={{
-              border: '0.5px solid var(--border)',
-              color: 'var(--foreground)',
+              backgroundImage:
+                'linear-gradient(180deg, rgba(255,253,247,0.96) 0%, rgba(255,253,247,0.84) 38%, rgba(15,79,47,0.06) 55%), url(/agriculture-field.jpg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center bottom',
             }}
           >
-            Lihat Fitur
-          </a>
-        </div>
-      </section>
+            <div className="absolute left-1/2 top-8 -translate-x-1/2 rounded-full border bg-white/86 px-4 py-2 text-xs font-semibold shadow-sm" style={{ borderColor: 'var(--border)' }}>
+              Real-time food supply intelligence
+            </div>
 
-      {/* Stats */}
-      <section
-        id="stats"
-        className="px-8 py-16"
-        style={{ background: '#0A3D1F' }}
-      >
-        <div className="max-w-4xl mx-auto grid grid-cols-4 gap-8 text-center">
-          {stats.map((s) => (
-            <div key={s.label}>
-              <div className="text-4xl font-medium text-white mb-2">
-                {s.value}
+            <div className="mx-auto max-w-3xl px-5 pt-24 text-center">
+              <div className="ag-chip mx-auto mb-5 px-3 py-1.5">
+                <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'var(--ag-primary)' }} />
+                Precision agriculture
               </div>
 
-              <div
-                className="text-sm"
-                style={{ color: 'rgba(255,255,255,0.6)' }}
-              >
-                {s.label}
+              <h1 className="text-5xl font-semibold leading-[1.04] tracking-tight">
+                The Command Center For Indonesia Food Distribution
+              </h1>
+
+              <p className="mx-auto mt-5 max-w-2xl text-sm leading-6" style={{ color: 'var(--muted-foreground)' }}>
+                Monitor harga pangan, deteksi anomali, dan ambil keputusan distribusi
+                berdasarkan pipeline data real, bukan asumsi.
+              </p>
+
+              <div className="mt-7 flex items-center justify-center gap-3">
+                <Link
+                  href="/login"
+                  className="rounded-lg px-5 py-3 text-sm font-semibold text-white"
+                  style={{ background: 'var(--ag-primary)' }}
+                >
+                  Buka Dashboard
+                </Link>
+                <a href="#features" className="ag-button px-5 py-3 text-sm font-semibold">
+                  Lihat Sistem
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="grid grid-cols-4 border-y" style={{ borderColor: 'var(--border)' }}>
+          {stats.map((stat) => (
+            <div key={stat.label} className="px-7 py-6">
+              <div className="text-3xl font-semibold">{stat.value}</div>
+              <div className="mt-1 text-xs" style={{ color: 'var(--muted-foreground)' }}>
+                {stat.label}
               </div>
             </div>
           ))}
-        </div>
-      </section>
-    </div>
+        </section>
+
+        <section id="features" className="grid grid-cols-[0.9fr_1.1fr] gap-10 px-7 py-16">
+          <div>
+            <div className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--ag-primary)' }}>
+              2026
+            </div>
+            <h2 className="mt-4 text-3xl font-semibold leading-tight">
+              From raw price records to actionable distribution decisions.
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            {features.map((feature, index) => (
+              <div key={feature} className="ag-soft p-4">
+                <div className="text-xs font-semibold" style={{ color: 'var(--ag-primary)' }}>
+                  0{index + 1}
+                </div>
+                <div className="mt-8 text-sm font-semibold">{feature}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+    </main>
   );
 }
