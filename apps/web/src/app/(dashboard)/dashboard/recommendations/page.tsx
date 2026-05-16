@@ -8,6 +8,7 @@ import {
 
 import { useRecommendations } from '@/hooks/use-recommendations';
 import { CustomSelect } from '@/components/ui/custom-select';
+import { Map, MapPin, BadgeDollarSign, TrendingUp, Info, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export default function RecommendationsPage() {
   const { data: commodities } = useCommodities();
@@ -79,42 +80,51 @@ export default function RecommendationsPage() {
       <div className="grid grid-cols-4 gap-4">
         {[
           {
-            label: 'Total Pasangan',
+            label: 'Rute Distribusi Potensial',
             value: `${data?.total_pairs ?? 0}`,
-            sub: 'origin → destination',
+            sub: 'Analisis dari origin ke destinasi',
+            icon: MapPin,
           },
           {
-            label: 'Region Dianalisis',
+            label: 'Wilayah Terjangkau',
             value: `${data?.regions_analyzed ?? 0}`,
-            sub: 'wilayah aktif',
+            sub: 'Region aktif terpantau',
+            icon: Map,
           },
           {
-            label: 'Rata-rata Nasional',
+            label: 'Harga Rata-rata Nasional',
             value: hasAvgPrice
               ? `Rp ${data.avg_price.toLocaleString('id-ID')}`
               : '-',
             sub: selectedCommodity?.localName || '-',
+            icon: BadgeDollarSign,
           },
           {
-            label: 'Rekomendasi Aktif',
+            label: 'Peluang Distribusi',
             value: `${recommendations.length}`,
-            sub: 'saran distribusi',
+            sub: 'Saran tindakan saat ini',
             color: recommendations.length > 0 ? '#27500A' : 'var(--foreground)',
+            icon: TrendingUp,
           },
         ].map((m) => (
           <div
             key={m.label}
-            className="rounded-xl p-4"
-            style={{ background: 'var(--background)', border: '0.5px solid var(--border)' }}
+            className="rounded-xl p-4 flex items-start gap-3"
+            style={{ background: 'var(--background)', border: '0.5px solid var(--border)', boxShadow: '0 1px 2px rgba(0,0,0,0.02)' }}
           >
-            <div className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}>
-              {m.label}
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: '#F1EFE8', color: '#444441' }}>
+              <m.icon className="w-4 h-4" />
             </div>
-            <div className="text-2xl font-medium mb-1" style={{ color: m.color || 'var(--foreground)' }}>
-              {m.value}
-            </div>
-            <div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
-              {m.sub}
+            <div>
+              <div className="text-xs mb-1 font-medium" style={{ color: 'var(--muted-foreground)' }}>
+                {m.label}
+              </div>
+              <div className="text-2xl font-bold mb-0.5" style={{ color: m.color || 'var(--foreground)' }}>
+                {m.value}
+              </div>
+              <div className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
+                {m.sub}
+              </div>
             </div>
           </div>
         ))}
@@ -122,13 +132,14 @@ export default function RecommendationsPage() {
 
       {/* Disclaimer */}
       <div
-        className="px-4 py-3 rounded-xl text-xs"
-        style={{ background: '#E6F1FB', border: '0.5px solid #B5D4F4', color: '#0C447C' }}
+        className="px-4 py-3.5 rounded-xl text-xs flex items-start gap-2.5"
+        style={{ background: '#F4F9FD', border: '0.5px solid #B5D4F4', color: '#0C447C' }}
       >
-        <span className="font-medium">Catatan:</span>{' '}
-        Rekomendasi ini bersifat informatif berdasarkan selisih harga antar wilayah.
-        Keputusan distribusi tetap berada di tangan distributor dengan mempertimbangkan
-        faktor logistik, relasi bisnis, dan kondisi lapangan.
+        <Info className="w-4 h-4 shrink-0 mt-0.5" />
+        <div className="leading-relaxed">
+          <span className="font-semibold">Penting:</span> Rekomendasi ini bersifat informatif berdasarkan analisis selisih harga dan pasokan antar wilayah. 
+          Keputusan eksekusi distribusi tetap berada di tangan Anda dengan mempertimbangkan faktor logistik riil, relasi bisnis, dan kondisi lapangan.
+        </div>
       </div>
 
       {/* Loading */}
@@ -165,30 +176,36 @@ export default function RecommendationsPage() {
                 className="rounded-xl p-5"
                 style={{ background: 'var(--background)', border: '0.5px solid var(--border)' }}
               >
-                <div className="flex items-start justify-between mb-4">
+                <div className="flex items-start justify-between mb-5">
                   {/* Route */}
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-2">
-                      <div className="text-sm font-medium">{rec.origin_name}</div>
-                      <div
-                        className="text-xs px-2 py-0.5 rounded-full"
-                        style={{ background: '#EAF3DE', color: '#27500A' }}
-                      >
-                        Rp {rec.origin_price.toLocaleString('id-ID')}
+                  <div className="flex items-center gap-4">
+                    <div className="flex flex-col gap-1.5">
+                      <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: 'var(--muted-foreground)' }}>Wilayah Surplus (Asal)</div>
+                      <div className="flex items-center gap-2">
+                        <div className="text-base font-bold">{rec.origin_name}</div>
+                        <div
+                          className="text-xs px-2 py-0.5 rounded-full font-semibold"
+                          style={{ background: '#EAF3DE', color: '#27500A' }}
+                        >
+                          Rp {rec.origin_price.toLocaleString('id-ID')}
+                        </div>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-1 text-lg" style={{ color: '#166534' }}>
-                      →
+                    <div className="flex items-center justify-center px-2" style={{ color: '#166534' }}>
+                      <ArrowRight className="w-5 h-5 opacity-40" />
                     </div>
 
-                    <div className="flex items-center gap-2">
-                      <div className="text-sm font-medium">{rec.dest_name}</div>
-                      <div
-                        className="text-xs px-2 py-0.5 rounded-full"
-                        style={{ background: '#FCEBEB', color: '#A32D2D' }}
-                      >
-                        Rp {rec.dest_price.toLocaleString('id-ID')}
+                    <div className="flex flex-col gap-1.5">
+                      <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: 'var(--muted-foreground)' }}>Wilayah Defisit (Tujuan)</div>
+                      <div className="flex items-center gap-2">
+                        <div className="text-base font-bold">{rec.dest_name}</div>
+                        <div
+                          className="text-xs px-2 py-0.5 rounded-full font-semibold"
+                          style={{ background: '#FCEBEB', color: '#A32D2D' }}
+                        >
+                          Rp {rec.dest_price.toLocaleString('id-ID')}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -196,32 +213,32 @@ export default function RecommendationsPage() {
                   {/* Score */}
                   <div className="flex items-center gap-2 flex-shrink-0">
                     <span
-                      className="text-xs px-2.5 py-1 rounded-full font-medium"
-                      style={{ background: scoreStyle.bg, color: scoreStyle.color }}
+                      className="text-xs px-2.5 py-1 rounded-full font-bold uppercase tracking-wide"
+                      style={{ background: scoreStyle.bg, color: scoreStyle.color, fontSize: '10px' }}
                     >
                       {getScoreLabel(rec.score)}
                     </span>
-                    <span className="text-lg font-medium" style={{ color: scoreStyle.color }}>
+                    <span className="text-xl font-bold" style={{ color: scoreStyle.color }}>
                       {(rec.score * 100).toFixed(0)}%
                     </span>
                   </div>
                 </div>
 
                 {/* Breakdown */}
-                <div className="grid grid-cols-4 gap-3 mb-4">
+                <div className="grid grid-cols-4 gap-3 mb-5">
                   {[
-                    { label: 'Surplus Pasokan', value: (rec.surplus_score * 100).toFixed(0) + '%' },
-                    { label: 'Defisit Pasokan', value: (rec.deficit_score * 100).toFixed(0) + '%' },
-                    { label: 'Selisih Harga', value: `Rp ${rec.price_differential.toLocaleString('id-ID')}` },
+                    { label: 'Indikator Surplus', value: (rec.surplus_score * 100).toFixed(0) + '%' },
+                    { label: 'Indikator Defisit', value: (rec.deficit_score * 100).toFixed(0) + '%' },
+                    { label: 'Potensi Margin', value: `Rp ${rec.price_differential.toLocaleString('id-ID')}` },
                     { label: 'Tingkat Keyakinan', value: (rec.confidence * 100).toFixed(0) + '%' },
                   ].map((item) => (
                     <div
                       key={item.label}
-                      className="rounded-lg p-2.5 text-center"
-                      style={{ background: 'var(--muted)' }}
+                      className="rounded-lg p-3 text-center border"
+                      style={{ background: '#FAFAFA', borderColor: 'var(--border)' }}
                     >
-                      <div className="text-xs font-medium mb-0.5">{item.value}</div>
-                      <div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
+                      <div className="text-sm font-bold mb-1" style={{ color: 'var(--foreground)' }}>{item.value}</div>
+                      <div className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: 'var(--muted-foreground)' }}>
                         {item.label}
                       </div>
                     </div>
@@ -229,20 +246,20 @@ export default function RecommendationsPage() {
                 </div>
 
                 {/* Score bar */}
-                <div className="mb-3">
+                <div className="mb-4">
                   <div
-                    className="flex justify-between text-xs mb-1"
+                    className="flex justify-between text-xs mb-2 font-semibold uppercase tracking-wide"
                     style={{ color: 'var(--muted-foreground)' }}
                   >
-                    <span>Skor rekomendasi</span>
-                    <span>{(rec.score * 100).toFixed(1)}%</span>
+                    <span>Skor Kelayakan Distribusi</span>
+                    <span style={{ color: 'var(--foreground)' }}>{(rec.score * 100).toFixed(1)}%</span>
                   </div>
                   <div
-                    className="h-1.5 rounded-full overflow-hidden"
+                    className="h-2 rounded-full overflow-hidden"
                     style={{ background: 'var(--muted)' }}
                   >
                     <div
-                      className="h-full rounded-full transition-all"
+                      className="h-full rounded-full transition-all duration-500 ease-in-out"
                       style={{
                         width: `${rec.score * 100}%`,
                         background:
@@ -253,15 +270,16 @@ export default function RecommendationsPage() {
                 </div>
 
                 {/* Reasons */}
-                <div className="space-y-1.5">
+                <div className="space-y-2 mt-5 pt-4 border-t" style={{ borderColor: 'var(--border)' }}>
+                  <div className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: 'var(--muted-foreground)' }}>Faktor Pendukung:</div>
                   {rec.reasons.map((reason: string, j: number) => (
                     <div
                       key={j}
-                      className="flex items-start gap-2 text-xs"
-                      style={{ color: 'var(--muted-foreground)' }}
+                      className="flex items-start gap-2.5 text-sm leading-relaxed"
+                      style={{ color: 'var(--foreground)' }}
                     >
-                      <span style={{ color: '#166634', flexShrink: 0 }}>·</span>
-                      {reason}
+                      <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" style={{ color: '#639922' }} />
+                      <span className="font-medium">{reason}</span>
                     </div>
                   ))}
                 </div>
