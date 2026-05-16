@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useUnreadCount } from '@/hooks/use-alerts';
+import { useState } from 'react';
 
 import {
   LayoutDashboard,
@@ -30,7 +31,9 @@ const bottomItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { data: unreadCount } = useUnreadCount();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   return (
     <aside
@@ -129,15 +132,52 @@ export function Sidebar() {
               analyst@agriflow.ai
             </div>
           </div>
-          <Link
-            href="/"
+          <button
+            onClick={() => setShowLogoutModal(true)}
             className="shrink-0 flex items-center justify-center h-8 w-8 rounded-md transition-colors text-gray-400 hover:text-red-600 hover:bg-red-50"
             title="Keluar dari sistem"
           >
             <LogOut size={16} strokeWidth={2.5} />
-          </Link>
+          </button>
         </div>
       </div>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setShowLogoutModal(false)}
+          />
+          <div 
+            className="relative bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm animate-in fade-in zoom-in-95 duration-200"
+            style={{ border: '1px solid var(--border)' }}
+          >
+            <div className="w-12 h-12 rounded-full flex items-center justify-center mb-4" style={{ background: '#FCEBEB', color: '#A32D2D' }}>
+              <LogOut size={24} strokeWidth={2.5} />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 mb-1">Keluar dari sesi?</h3>
+            <p className="text-sm mb-6" style={{ color: 'var(--muted-foreground)' }}>
+              Anda akan dikembalikan ke halaman utama dan harus masuk kembali untuk melihat dashboard.
+            </p>
+            <div className="flex items-center gap-3 w-full">
+              <button 
+                onClick={() => setShowLogoutModal(false)}
+                className="flex-1 px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-gray-100 hover:bg-gray-200 text-gray-700"
+              >
+                Batal
+              </button>
+              <button 
+                onClick={() => router.push('/')}
+                className="flex-1 px-4 py-2 rounded-lg text-sm font-semibold transition-colors text-white"
+                style={{ background: '#A32D2D' }}
+              >
+                Ya, Keluar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </aside>
   );
 }
