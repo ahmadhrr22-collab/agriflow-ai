@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useCommodities, useRegions } from '@/hooks/use-prices';
 import { useDashboardStore } from '@/store/dashboard.store';
 import { Database } from 'lucide-react';
