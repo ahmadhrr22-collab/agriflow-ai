@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
-import { useCommodities } from '@/hooks/use-prices';
+import { useCommodities, useRegions } from '@/hooks/use-prices';
 import { useDashboardStore } from '@/store/dashboard.store';
 import { Database } from 'lucide-react';
+import { CustomSelect } from '@/components/ui/custom-select';
 
 type CommodityOption = {
   id: string;
@@ -12,26 +12,21 @@ type CommodityOption = {
 
 export function DataQualityBanner() {
   const { data: commodities } = useCommodities();
-  const { selectedCommodityId, setSelectedCommodityId } = useDashboardStore();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  const { data: regions } = useRegions();
+  const { selectedCommodityId, setSelectedCommodityId, selectedRegionId, setSelectedRegionId } = useDashboardStore();
 
   useEffect(() => {
     if (commodities && commodities.length > 0 && !selectedCommodityId) {
       setSelectedCommodityId(commodities[0].id);
     }
   }, [commodities, selectedCommodityId, setSelectedCommodityId]);
+
+  useEffect(() => {
+    if (regions && regions.length > 0 && !selectedRegionId) {
+      const jakarta = regions.find((r: any) => r.name === 'Jakarta Pusat');
+      setSelectedRegionId(jakarta?.id || regions[0].id);
+    }
+  }, [regions, selectedRegionId, setSelectedRegionId]);
 
   return (
     <div className="ag-card-strong flex items-center justify-between px-4 py-3 text-sm">
@@ -51,42 +46,19 @@ export function DataQualityBanner() {
       </div>
 
       <div className="flex items-center gap-3">
-        <div className="relative" ref={dropdownRef}>
-          <button
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="ag-button flex items-center justify-between gap-2 text-xs px-3 py-2 outline-none cursor-pointer min-w-[150px] bg-white border shadow-sm"
-            style={{ fontWeight: 600, borderColor: 'var(--border)' }}
-          >
-            <span className="truncate">
-              {commodities?.find((c: CommodityOption) => c.id === selectedCommodityId)?.localName || 'Pilih Komoditas'}
-            </span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-200 text-gray-500 ${isDropdownOpen ? 'rotate-180' : ''}`}>
-              <path d="m6 9 6 6 6-6"/>
-            </svg>
-          </button>
-
-          {isDropdownOpen && (
-            <div className="absolute top-full left-0 mt-1 w-full rounded-lg border bg-white shadow-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2" style={{ borderColor: 'var(--border)' }}>
-              <div className="max-h-60 overflow-y-auto py-1">
-                {commodities?.map((commodity: CommodityOption) => (
-                  <button
-                    key={commodity.id}
-                    className="w-full text-left px-3 py-2.5 text-xs font-semibold transition-colors hover:bg-gray-50"
-                    style={{ 
-                      color: selectedCommodityId === commodity.id ? 'var(--ag-primary)' : 'var(--foreground)',
-                      background: selectedCommodityId === commodity.id ? 'var(--ag-soft)' : 'transparent'
-                    }}
-                    onClick={() => {
-                      setSelectedCommodityId(commodity.id);
-                      setIsDropdownOpen(false);
-                    }}
-                  >
-                    {commodity.localName}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+        <div className="flex items-center gap-2">
+          <CustomSelect
+            value={selectedCommodityId}
+            onChange={setSelectedCommodityId}
+            options={(commodities || []).map((c: any) => ({ id: c.id, label: c.localName }))}
+            className="min-w-[150px] shadow-sm"
+          />
+          <CustomSelect
+            value={selectedRegionId}
+            onChange={setSelectedRegionId}
+            options={(regions || []).map((r: any) => ({ id: r.id, label: r.name }))}
+            className="min-w-[150px] shadow-sm"
+          />
         </div>
 
         <div className="hidden lg:flex items-center gap-2 text-xs" style={{ color: 'var(--muted-foreground)' }}>
