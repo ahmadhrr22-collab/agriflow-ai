@@ -14,6 +14,7 @@ import {
   Bell,
   Settings,
   LogOut,
+  ShieldAlert,
 } from 'lucide-react';
 
 const navItems = [
@@ -142,38 +143,48 @@ export function Sidebar() {
         </div>
       </div>
 
-      {/* Logout Confirmation Modal */}
+      {/* Secure Logout Confirmation Modal */}
       {showLogoutModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
           <div 
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity"
             onClick={() => setShowLogoutModal(false)}
           />
           <div 
-            className="relative bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm animate-in fade-in zoom-in-95 duration-200"
-            style={{ border: '1px solid var(--border)' }}
+            className="relative bg-white rounded-2xl shadow-2xl w-full max-w-[420px] overflow-hidden animate-in fade-in zoom-in-95 duration-200"
           >
-            <div className="w-12 h-12 rounded-full flex items-center justify-center mb-4" style={{ background: '#FCEBEB', color: '#A32D2D' }}>
-              <LogOut size={24} strokeWidth={2.5} />
-            </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-1">Keluar dari sesi?</h3>
-            <p className="text-sm mb-6" style={{ color: 'var(--muted-foreground)' }}>
-              Anda akan dikembalikan ke halaman utama dan harus masuk kembali untuk melihat dashboard.
-            </p>
-            <div className="flex items-center gap-3 w-full">
-              <button 
-                onClick={() => setShowLogoutModal(false)}
-                className="flex-1 px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-gray-100 hover:bg-gray-200 text-gray-700"
-              >
-                Batal
-              </button>
-              <button 
-                onClick={() => router.push('/')}
-                className="flex-1 px-4 py-2 rounded-lg text-sm font-semibold transition-colors text-white"
-                style={{ background: '#A32D2D' }}
-              >
-                Ya, Keluar
-              </button>
+            {/* Top Security Indicator Bar */}
+            <div className="h-1.5 w-full bg-red-600"></div>
+            
+            <div className="p-6 sm:p-7">
+              <div className="flex gap-4">
+                <div className="shrink-0 w-12 h-12 rounded-full flex items-center justify-center bg-red-50 text-red-600 border border-red-100 shadow-sm">
+                  <ShieldAlert size={24} strokeWidth={2} />
+                </div>
+                <div className="pt-1">
+                  <h3 className="text-lg font-bold text-gray-900 mb-1.5">Akhiri Sesi Berjalan?</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed mb-6">
+                    Sistem akan <strong className="text-gray-700">mengakhiri sesi Anda secara aman</strong>. Semua akses aktif akan diputus dan Anda perlu masuk kembali.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex flex-col-reverse sm:flex-row items-center gap-3 w-full sm:justify-end border-t border-gray-100 pt-5">
+                <button 
+                  onClick={() => setShowLogoutModal(false)}
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors bg-white border border-gray-300 hover:bg-gray-50 text-gray-700"
+                >
+                  Batal
+                </button>
+                <button 
+                  onClick={() => router.push('/')}
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors text-white hover:bg-red-700 shadow-sm flex items-center justify-center gap-2"
+                  style={{ background: '#DC2626' }}
+                >
+                  <LogOut size={16} strokeWidth={2.5} />
+                  Keluar Sekarang
+                </button>
+              </div>
             </div>
           </div>
         </div>
