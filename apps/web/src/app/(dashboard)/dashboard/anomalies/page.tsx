@@ -623,96 +623,71 @@ export default function AnomaliesPage() {
                   'var(--border)',
               }}
             >
-              {anomalies.map(
-                (
-                  a: any,
-                  i: number,
-                ) => (
-                  <div
-                    key={i}
-                    className="p-4"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-medium">
-                        {a.date}
+              {anomalies.map((a: any, i: number) => {
+                const isCritical = a.severity === 'critical';
+                const pctChange = parseFloat(a.pct_change ?? 0);
+                const isUp = pctChange > 0;
+
+                return (
+                  <div key={i} className="p-4" style={{ borderBottom: '0.5px solid var(--border)' }}>
+                    {/* Tanggal + Badge */}
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-xs font-semibold" style={{ color: 'var(--muted-foreground)' }}>
+                        {new Date(a.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
                       </span>
-
                       <span
-                        className="text-xs px-2 py-0.5 rounded-full font-medium"
+                        className="text-[11px] px-2.5 py-1 rounded-full font-bold"
                         style={{
-                          background:
-                            a.severity ===
-                            'critical'
-                              ? '#FCEBEB'
-                              : '#FAEEDA',
-
-                          color:
-                            a.severity ===
-                            'critical'
-                              ? '#A32D2D'
-                              : '#633806',
+                          background: isCritical ? '#FCEBEB' : '#FAEEDA',
+                          color: isCritical ? '#A32D2D' : '#633806',
                         }}
                       >
-                        {a.severity ===
-                        'critical'
-                          ? 'Kritis'
-                          : 'Waspada'}
+                        {isCritical ? '🔴 Kritis' : '🟡 Waspada'}
                       </span>
                     </div>
 
-                    <div
-                      className="text-xs mb-2"
-                      style={{
-                        color:
-                          'var(--foreground)',
-                      }}
-                    >
-                      Rp{' '}
-                      {a.price.toLocaleString(
-                        'id-ID',
-                      )}
+                    {/* Harga */}
+                    <div className="text-lg font-bold mb-1.5" style={{ color: 'var(--foreground)' }}>
+                      Rp {a.price.toLocaleString('id-ID')}
                     </div>
 
-                    <div
-                      className="text-xs mb-2"
-                      style={{
-                        color:
-                          'var(--muted-foreground)',
-                      }}
-                    >
-                      {a.explanation}
-                    </div>
+                    {/* Penjelasan - strip z-score dari teks */}
+                    <p className="text-xs leading-relaxed mb-3" style={{ color: 'var(--muted-foreground)' }}>
+                      {String(a.explanation).replace(/\(z-score:[^)]*\)/gi, '').trim()}
+                    </p>
 
-                    <div className="flex gap-2">
-                      <span
-                        className="text-xs px-1.5 py-0.5 rounded"
+                    {/* Indikator visual 2 kotak */}
+                    <div className="grid grid-cols-2 gap-2">
+                      <div
+                        className="rounded-lg px-3 py-2 text-center"
                         style={{
-                          background:
-                            'var(--muted)',
-
-                          color:
-                            'var(--muted-foreground)',
+                          background: isUp ? '#FFF4F4' : '#F0FBF4',
+                          border: `0.5px solid ${isUp ? '#FBCACA' : '#A7DFC1'}`,
                         }}
                       >
-                        Skor Anomali: {a.z_score}
-                      </span>
+                        <div className="text-sm font-extrabold" style={{ color: isUp ? '#A32D2D' : '#27500A' }}>
+                          {isUp ? '▲' : '▼'} {Math.abs(pctChange).toFixed(1)}%
+                        </div>
+                        <div className="text-[10px] font-medium mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
+                          Perubahan 7 Hari
+                        </div>
+                      </div>
 
-                      <span
-                        className="text-xs px-1.5 py-0.5 rounded"
-                        style={{
-                          background:
-                            'var(--muted)',
-
-                          color:
-                            'var(--muted-foreground)',
-                        }}
+                      <div
+                        className="rounded-lg px-3 py-2 text-center"
+                        style={{ background: '#F7F7F7', border: '0.5px solid var(--border)' }}
                       >
-                        Lonjakan: {a.pct_change}%
-                      </span>
+                        <div className="text-sm font-extrabold" style={{ color: isCritical ? '#A32D2D' : '#633806' }}>
+                          {isCritical ? 'Tinggi' : 'Sedang'}
+                        </div>
+                        <div className="text-[10px] font-medium mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
+                          Tingkat Risiko
+                        </div>
+                      </div>
                     </div>
                   </div>
-                ),
-              )}
+                );
+              })}
             </div>
           )}
         </div>
