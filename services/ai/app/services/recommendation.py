@@ -136,7 +136,7 @@ def generate_recommendations(commodity_id: str, top_n: int = 5) -> dict:
                 continue
 
             # Hanya rekomendasikan jika selisih harga cukup terlihat.
-            if abs(origin["price"] - dest["price"]) < 500:
+            if abs(origin["price"] - dest["price"]) < 100:
                 continue
 
             # Origin harus lebih murah dari destination

@@ -13,7 +13,6 @@ import { Map, MapPin, BadgeDollarSign, TrendingUp, Info, ArrowRight, CheckCircle
 export default function RecommendationsPage() {
   const { data: commodities } = useCommodities();
   const [commodityId, setCommodityId] = useState('');
-  const [topN, setTopN] = useState(5);
 
   // Initialize commodity from API
   useEffect(() => {
@@ -23,7 +22,7 @@ export default function RecommendationsPage() {
     }
   }, [commodities, commodityId]);
 
-  const { data, isLoading } = useRecommendations(commodityId, topN);
+  const { data, isLoading } = useRecommendations(commodityId, 5);
 
   const recommendations = data?.recommendations || [];
   const hasAvgPrice = typeof data?.avg_price === 'number';
@@ -56,24 +55,12 @@ export default function RecommendationsPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <CustomSelect
-            value={commodityId}
-            onChange={setCommodityId}
-            options={(commodities || []).map((c: any) => ({ id: c.id, label: c.localName }))}
-            className="min-w-[150px]"
-          />
-          <CustomSelect
-            value={topN.toString()}
-            onChange={(val) => setTopN(Number(val))}
-            options={[
-              { id: '3', label: 'Top 3' },
-              { id: '5', label: 'Top 5' },
-              { id: '10', label: 'Top 10' },
-            ]}
-            className="min-w-[100px]"
-          />
-        </div>
+        <CustomSelect
+          value={commodityId}
+          onChange={setCommodityId}
+          options={(commodities || []).map((c: any) => ({ id: c.id, label: c.localName }))}
+          className="min-w-[150px]"
+        />
       </div>
 
       {/* Summary */}

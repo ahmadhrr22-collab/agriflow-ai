@@ -60,19 +60,25 @@ async def seed_historical_data(days: int = 30):
             "minyak-goreng": 15000,
         }
 
+        # Regional multipliers: simulate realistic supply/demand differences
+        region_multipliers = [
+            0.78, 0.82, 0.87, 0.91, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20,
+            1.25, 0.80, 0.85, 0.90, 0.97, 1.03, 1.08, 1.13, 1.18, 0.75,
+        ]
         today = date.today()
         for offset in range(days, 0, -1):
             target = datetime.now() - timedelta(days=offset)
             for commodity in commodities:
                 base     = base_prices.get(commodity.name, 20000)
-                trend    = offset * (-100)
-                seasonal = 1500 * (0.5 + 0.5 * ((offset % 7) / 7))
+                trend    = offset * (-80)
+                seasonal = 2000 * (0.5 + 0.5 * ((offset % 7) / 7))
                 base_day = base + trend + seasonal
 
-                for region in regions:
-                    variation = random.uniform(-0.08, 0.10)
-                    noise     = random.uniform(-0.02, 0.02)
-                    price     = max(base_day * (1 + variation + noise), base * 0.7)
+                for i, region in enumerate(regions):
+                    # Assign consistent regional multiplier per region index
+                    regional_mult = region_multipliers[i % len(region_multipliers)]
+                    noise         = random.uniform(-0.03, 0.03)
+                    price         = max(base_day * (regional_mult + noise), base * 0.6)
 
                     existing = db.execute(
                         text("""
