@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useUnreadCount } from '@/hooks/use-alerts';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 import {
   LayoutDashboard,
@@ -35,6 +36,11 @@ export function Sidebar() {
   const router = useRouter();
   const { data: unreadCount } = useUnreadCount();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <aside
@@ -143,42 +149,43 @@ export function Sidebar() {
         </div>
       </div>
 
-      {/* Simple ChatGPT-style Logout Modal */}
-      {showLogoutModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* Simple Centered Logout Modal */}
+      {mounted && showLogoutModal && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
           <div 
-            className="absolute inset-0 bg-black/60 transition-opacity"
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
             onClick={() => setShowLogoutModal(false)}
           />
           <div 
-            className="relative rounded-2xl w-full max-w-[380px] p-8 pt-10 text-center animate-in fade-in zoom-in-95 duration-200 shadow-2xl"
-            style={{ background: '#212121', color: '#ececf1' }}
+            className="relative bg-white rounded-2xl w-full max-w-[360px] p-8 pt-10 text-center animate-in fade-in zoom-in-95 duration-200 shadow-2xl border"
+            style={{ borderColor: 'var(--border)' }}
           >
-            <h3 className="text-xl font-bold mb-4">
+            <h3 className="text-[22px] font-extrabold text-gray-900 mb-3 leading-tight">
               Apakah Anda yakin<br/>ingin keluar?
             </h3>
-            <p className="text-[15px] mb-8" style={{ color: '#d1d5db' }}>
+            <p className="text-[15px] text-gray-500 mb-8 font-medium">
               Keluar dari Agriflow sebagai<br/>analyst@agriflow.ai?
             </p>
             
             <div className="flex flex-col gap-3 w-full">
               <button 
                 onClick={() => router.push('/')}
-                className="w-full py-3 rounded-xl text-[15px] font-semibold transition-opacity hover:opacity-90"
-                style={{ background: '#ffffff', color: '#000000' }}
+                className="w-full py-3 rounded-xl text-[15px] font-bold transition-all text-white shadow-sm hover:opacity-90"
+                style={{ background: 'var(--ag-primary)' }}
               >
                 Keluar
               </button>
               <button 
                 onClick={() => setShowLogoutModal(false)}
-                className="w-full py-3 rounded-xl text-[15px] font-semibold transition-opacity hover:opacity-80"
-                style={{ background: 'transparent', border: '1px solid #565869', color: '#ffffff' }}
+                className="w-full py-3 rounded-xl text-[15px] font-bold transition-all text-gray-700 bg-white border hover:bg-gray-50"
+                style={{ borderColor: 'var(--border)' }}
               >
                 Batal
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </aside>
   );
