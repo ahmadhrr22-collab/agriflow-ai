@@ -26,6 +26,9 @@ async function bootstrap() {
       'https://agriflow-lkmv2hw11-ahmadhrr22-collabs-projects.vercel.app',
       'https://agriflow-nnrhj2w6b-ahmadhrr22-collabs-projects.vercel.app',
       /\.vercel\.app$/,
+      // Cloud Run frontend
+      'https://agriflow-web-876391029544.asia-southeast1.run.app',
+      /\.run\.app$/,
     ],
     credentials: true,
   });

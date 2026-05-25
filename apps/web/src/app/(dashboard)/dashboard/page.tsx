@@ -3,15 +3,10 @@
 import { useEffect } from 'react';
 
 import { MetricCards } from '@/components/dashboard/metric-cards';
-
 import { PriceChart } from '@/components/dashboard/price-chart';
-
 import { AlertPreview } from '@/components/dashboard/alert-preview';
-
 import { RecommendationPreview } from '@/components/dashboard/recommendation-preview';
-
 import { DataQualityBanner } from '@/components/dashboard/data-quality-banner';
-
 import { GeminiInsight } from '@/components/dashboard/gemini-insight';
 
 import {
@@ -73,6 +68,16 @@ export default function DashboardPage() {
   return (
     <div className="space-y-5">
       <DashboardInit />
+
+      {/* Greeting Header */}
+      <div className="pb-1.5 border-b border-[rgba(230,224,210,0.5)]">
+        <h2 className="text-xl font-bold tracking-tight" style={{ color: '#0f4f2f' }}>
+          Selamat Datang di Command Center
+        </h2>
+        <p className="text-xs text-muted-foreground mt-0.5">
+          Analisis supply, demand, dan pergerakan harga pangan nasional secara real-time
+        </p>
+      </div>
 
       <DataQualityBanner />
 

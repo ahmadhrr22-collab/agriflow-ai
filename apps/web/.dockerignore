@@ -1,0 +1,11 @@
+node_modules
+.next
+.vercel
+.git
+.gitignore
+*.md
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+# NOTE: .env.production is intentionally NOT ignored so Next.js can read it during build

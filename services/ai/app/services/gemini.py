@@ -5,7 +5,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 genai.configure(api_key=settings.gemini_api_key)
-model = genai.GenerativeModel("gemini-3-flash-preview")
+model = genai.GenerativeModel("gemini-3.5-flash")
 
 async def generate_market_insight(data: dict) -> dict:
     """

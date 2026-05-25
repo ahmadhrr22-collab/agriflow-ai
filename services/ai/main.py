@@ -53,6 +53,9 @@ app.add_middleware(
         "https://agriflow-ai.vercel.app",
         "https://agriflow-lkmv2hw11-ahmadhrr22-collabs-projects.vercel.app",
         "https://agriflow-nnrhj2w6b-ahmadhrr22-collabs-projects.vercel.app",
+        # Cloud Run URLs
+        "https://agriflow-api-694788844994.asia-southeast1.run.app",
+        "https://agriflow-web-876391029544.asia-southeast1.run.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],

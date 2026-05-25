@@ -36,8 +36,8 @@ export const metadata: Metadata = {
     images: ['/agriculture-field.jpg'],
   },
   icons: {
-    icon: '/agriflow-logo.png',
-    apple: '/agriflow-logo.png',
+    icon: '/favicon.png',
+    apple: '/favicon.png',
   },
   other: {
     'JuaraVibeCoding:email': 'ahmadhrr22@gmail.com',

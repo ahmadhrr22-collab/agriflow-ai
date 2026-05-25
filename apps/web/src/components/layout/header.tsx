@@ -1,6 +1,8 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { Calendar } from 'lucide-react';
 
 const pageTitles: Record<string, { title: string; subtitle: string; eyebrow: string }> = {
   '/dashboard': {
@@ -48,6 +50,24 @@ export function Header() {
     eyebrow: 'Dashboard',
   };
 
+  const [mounted, setMounted] = useState(false);
+  const [formattedDate, setFormattedDate] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMounted(true);
+      const options: Intl.DateTimeFormatOptions = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      };
+      const today = new Date();
+      setFormattedDate(today.toLocaleDateString('id-ID', options));
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <header
       className="h-[76px] flex items-center justify-between px-7 shrink-0"
@@ -68,6 +88,20 @@ export function Header() {
           </p>
         </div>
       </div>
+
+      {pathname === '/dashboard' && mounted && formattedDate && (
+        <div
+          className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-sm transition-all duration-300 hover:scale-[1.02]"
+          style={{
+            background: 'linear-gradient(135deg, rgba(15, 79, 47, 0.05) 0%, rgba(159, 211, 86, 0.08) 100%)',
+            color: 'var(--ag-primary)',
+            border: '1px solid rgba(15, 79, 47, 0.12)',
+          }}
+        >
+          <Calendar size={14} className="opacity-95 text-[var(--ag-primary)]" />
+          <span>{formattedDate}</span>
+        </div>
+      )}
     </header>
   );
 }
