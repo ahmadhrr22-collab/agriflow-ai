@@ -24,8 +24,10 @@ export function DataQualityBanner() {
 
   useEffect(() => {
     if (regions && regions.length > 0 && !selectedRegionId) {
-      const jakarta = regions.find((r: any) => r.name === 'Jakarta Pusat');
-      setSelectedRegionId(jakarta?.id || regions[0].id);
+      const defaultRegion = regions.find((r: any) =>
+        r.name.includes('Jakarta') || r.name.includes('Jawa') || r.name.includes('Aceh')
+      );
+      setSelectedRegionId(defaultRegion?.id || regions[0].id);
     }
   }, [regions, selectedRegionId, setSelectedRegionId]);
 
