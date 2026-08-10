@@ -35,8 +35,12 @@ export class AppModule implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    await this.usersService.seedDemoUser();
-    await this.commoditiesService.seed();
-    await this.regionsService.seed();
+    try {
+      await this.usersService.seedDemoUser();
+      await this.commoditiesService.seed();
+      await this.regionsService.seed();
+    } catch (error) {
+      console.warn('Seed onModuleInit warning:', error);
+    }
   }
 }
