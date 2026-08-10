@@ -31,5 +31,13 @@ export default async function handler(req: any, res: any) {
   if (!server) {
     server = await bootstrap();
   }
+  if (req.url === '/' || req.url === '') {
+    return res.status(200).json({
+      status: 'ok',
+      service: 'AgriFlow AI API',
+      version: '1.0.0',
+      endpoints: '/api/v1',
+    });
+  }
   server(req, res);
 }
