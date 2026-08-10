@@ -1,8 +1,15 @@
 import axios from 'axios';
 
+let baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1').trim();
+if (baseUrl.endsWith('/')) {
+  baseUrl = baseUrl.slice(0, -1);
+}
+if (!baseUrl.includes('/api/v1')) {
+  baseUrl = `${baseUrl}/api/v1`;
+}
+
 const api = axios.create({
-  // HARDCODE: Memaksa URL ke Cloud Run untuk mem-bypass masalah env Turborepo
-  baseURL: 'https://agriflow-api-694788844994.asia-southeast1.run.app/api/v1',
+  baseURL: baseUrl,
   headers: { 'Content-Type': 'application/json' },
 });
 
