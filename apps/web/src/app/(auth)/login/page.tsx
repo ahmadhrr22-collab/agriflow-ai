@@ -18,8 +18,13 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const apiUrl =
-        process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
+      let apiUrl = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1').trim();
+      if (apiUrl.endsWith('/')) {
+        apiUrl = apiUrl.slice(0, -1);
+      }
+      if (!apiUrl.includes('/api/v1')) {
+        apiUrl = `${apiUrl}/api/v1`;
+      }
 
       const res = await fetch(`${apiUrl}/auth/login`, {
         method: 'POST',
@@ -28,7 +33,11 @@ export default function LoginPage() {
       });
 
       if (!res.ok) {
-        setError('Email atau password salah.');
+        if (res.status === 401) {
+          setError('Email atau password salah.');
+        } else {
+          setError(`HTTP ${res.status}: Terjadi kesalahan pada server API.`);
+        }
         return;
       }
 
